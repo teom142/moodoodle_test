@@ -5,24 +5,26 @@ import Header from "./components/Header";
 function App() {
   return (
     <BrowserRouter>
-      <section className="w-[390px] h-[844px] flex flex-col m-auto">
-        <Pc className="flex flex-col m-auto">
-          <div className="k">
-            <Header />
+      <div className="bg-slate-100">
+        <section className="w-[390px] h-[844px] flex flex-col m-auto bg-white">
+          <Pc className="flex flex-col m-auto">
             <div className="">
-              <p>이것은 컴퓨터다.</p>
+              <Header />
+              <div className="">
+                <p>이것은 컴퓨터다.</p>
+              </div>
             </div>
-          </div>
-        </Pc>
-        <Mobile className="flex flex-col m-auto">
-          <div className="">
-            <Header />
+          </Pc>
+          <Mobile className="flex flex-col m-auto">
             <div className="">
-              <p>이것은 모바일이다.</p>
+              <Header />
+              <div className="">
+                <p>이것은 모바일이다.</p>
+              </div>
             </div>
-          </div>
-        </Mobile>
-      </section>
+          </Mobile>
+        </section>
+      </div>
     </BrowserRouter>
   );
 }

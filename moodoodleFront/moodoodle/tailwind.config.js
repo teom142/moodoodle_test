@@ -4,7 +4,11 @@ const plugin = require("tailwindcss/plugin");
 module.exports = {
   content: ["./src/**/*.{js,jsx}"],
   theme: {
-    extend: {},
+    extend: {
+      boxShadow: {
+        headerShadow: "0 3px 5px 0px rgba(0, 0, 0, 0.05)",
+      },
+    },
   },
   plugins: [
     plugin(({ addBase }) => {
