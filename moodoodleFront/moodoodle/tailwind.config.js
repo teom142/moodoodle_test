@@ -8,11 +8,11 @@ module.exports = {
       boxShadow: {
         headerShadow: "0 3px 5px 0px rgba(0, 0, 0, 0.05)",
         buttonShadow: "0px 0px 8px 0px rgba(0, 0, 0, 0.10)",
+        componentShadow: "0px 0px 20px 0px rgba(0, 0, 0, 0.05)",
       },
       colors: {
         darkNavy: "#0F2552",
         darkGray: "#4B4B4B",
-        lemon: "#FEFBE7",
       },
     },
   },
