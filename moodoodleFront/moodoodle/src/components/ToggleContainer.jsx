@@ -12,12 +12,12 @@ export default function ToggleContainer() {
     <>
       <div className="relative cursor-pointer" onClick={toggleHandler}>
         <div
-          className={`w-[37px] h-[17px] rounded-[30px] duration-[0.5s] ${
+          className={`w-[37px] h-[18px] rounded-[30px] duration-[0.5s] ${
             isOn ? "bg-[#00c866] duration-[0.5s]" : "bg-[#e9e9ea]"
           }`}
         />
         <div
-          className={`absolute top-[1px] w-[15px] h-[15px] rounded-full bg-[#fffeff] duration-[0.5s] ${
+          className={`absolute top-[1.5px] w-[15px] h-[15px] rounded-full bg-[#fffeff] duration-[0.5s] ${
             isOn ? "left-[20px] duration-[0.5s]" : "left-[2px]"
           }`}
         />
