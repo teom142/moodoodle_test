@@ -1,18 +1,17 @@
 import { BrowserRouter } from "react-router-dom";
 import { Mobile, Pc } from "./responsive";
 import Header from "./components/Header";
-
+import Main from "./pages/Main";
 function App() {
   return (
     <BrowserRouter>
       <div className="bg-slate-100">
         <section className="w-[390px] h-[844px] flex flex-col m-auto bg-white">
           <Pc className="flex flex-col m-auto">
+            <Header />
             <div className="">
-              <Header />
-              <div className="">
-                <p>이것은 컴퓨터다.</p>
-              </div>
+              <Main />
+              <p>이것은 컴퓨터다.</p>
             </div>
           </Pc>
           <Mobile className="flex flex-col m-auto">
