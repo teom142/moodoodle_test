@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import { useRecoilState } from 'recoil';
 import selectedDateState from '../stores/selectedDate';
 import useRenderCalenderBoard from './useRenderCalenderBoard';
+import MoodColorComponent from './MoodColorComponent';
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
 
-export default function Calendar() {
+export default function Calendar({ handleToggle }) {
   const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
   const splited = selectedDate.split('/');
 
@@ -33,7 +34,7 @@ export default function Calendar() {
   const board = useRenderCalenderBoard(selectedDate, handleSelectDate);
 
   return (
-    <div className='flex justify-center items-center w-[342px] h-[304px] rounded-[20px] shadow-componentShadow'>
+    <div className='flex relative justify-center items-center w-[342px] h-[304px] rounded-[20px] shadow-componentShadow'>
       <div className='flex flex-col justify-between items-center w-[290px] h-[260px]'>
         <div className='flex flex-row justify-between items-center w-[283px] h-[18px]'>
           <img
@@ -65,6 +66,13 @@ export default function Calendar() {
           </div>
         </div>
       </div>
+      <button
+        className='absolute right-[15px] bottom-[15px]'
+        type='button'
+        onClick={handleToggle}
+      >
+        <img src='/assets/more.svg' alt='컬러칩 보기' />
+      </button>
     </div>
   );
 }
