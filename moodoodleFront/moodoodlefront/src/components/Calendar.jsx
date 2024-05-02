@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import dayjs from 'dayjs';
 import { useRecoilState } from 'recoil';
 import selectedDateState from '../stores/selectedDate';
 import useRenderCalenderBoard from './useRenderCalenderBoard';
-import MoodColorComponent from './MoodColorComponent';
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
 
+// api를 통해 들어온 mood의 [0]번쨰가 색깔 무드가 될 것임(string)
+// color.js에 있는 MOOD_LIST 개수만큼 반복문 돌려서 MOOD_LIST.mood string에 색깔 무드가 포함되는 애의 color 사용해서 배경 칠하기!
 export default function Calendar({ handleToggle }) {
   const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
-  const splited = selectedDate.split('/');
+  const splited = selectedDate.split('-');
 
   const handleSelectDate = (v) => {
     setSelectedDate(v);
@@ -19,7 +20,7 @@ export default function Calendar({ handleToggle }) {
     const newDate = dayjs(selectedDate)
       .subtract(1, 'month')
       .endOf('month')
-      .format('MM/DD/YY');
+      .format('YYYY-MM-DD');
     setSelectedDate(newDate);
   };
 
@@ -27,7 +28,7 @@ export default function Calendar({ handleToggle }) {
     const newDate = dayjs(selectedDate)
       .add(1, 'month')
       .startOf('month')
-      .format('MM/DD/YY');
+      .format('YYYY-MM-DD');
     setSelectedDate(newDate);
   };
 
@@ -44,7 +45,7 @@ export default function Calendar({ handleToggle }) {
             onClick={handlePrevMonth}
           />
           <p className='text-[15px] font-semibold text-darkNavy'>
-            20{splited[2]}년 {splited[0]}월
+            {splited[0]}년 {splited[1]}월
           </p>
           <img
             src='/assets/rightArrow.svg'

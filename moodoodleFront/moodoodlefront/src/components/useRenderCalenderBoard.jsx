@@ -9,7 +9,7 @@ const useRenderCalenderBoard = (selectedDay, handleSelectDate) => {
         : dayjs(selectedDay)
             .startOf('month')
             .set('date', i - firstDay + 1)
-            .format('MM/DD/YY'),
+            .format('YYYY-MM-DD'),
     );
   };
 
@@ -19,13 +19,15 @@ const useRenderCalenderBoard = (selectedDay, handleSelectDate) => {
     const firstDay = dayjs(selectedDay).startOf('month').day();
     const daysInMonth = dayjs(selectedDay).daysInMonth();
     setArr(initArr(firstDay, daysInMonth));
+    handleSelectDate(selectedDay);
+    console.log(selectedDay);
   }, [selectedDay]);
 
   const content = arr.map((v, i) => (
     <div className='flex justify-center' key={v ? v.toString() : `${v}${i}`}>
-      {v && ( //TODO
+      {v && (
         <div
-          className='flex justify-center items-center w-[22px] h-[22px] rounded-full bg-gray-scale-1 text-center'
+          className='flex justify-center items-center w-[22px] h-[22px] rounded-full bg-gray-scale-1 text-center cursor-pointer'
           date={v}
           onClick={() => handleSelectDate(v)}
         >
