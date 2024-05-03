@@ -1,9 +1,13 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import dayjs from 'dayjs';
 import CustomButton from './CustomButton';
 
 export default function DiaryWriting() {
   const [textValue, setTextValue] = useState('');
+  const month = dayjs().format('MMM');
+  const year = dayjs().format('YYYY');
+  const day = dayjs().format('DD');
+
   const handleSetValue = (e) => {
     setTextValue(e.target.value);
   };
@@ -12,7 +16,9 @@ export default function DiaryWriting() {
       <div className='flex flex-col justify-between items-center w-[307px] h-[390px]'>
         <div className='flex flex-col h-[46px] justify-between items-center'>
           <p className='font-bold text-base text-darkNavy'>일기 쓰기</p>
-          <p className='font-medium text-sm text-darkGray'>Apr. 16th, 2024</p>
+          <p className='font-medium text-sm text-darkGray'>
+            {month}. {day}, {year}
+          </p>
         </div>
         <textarea
           className='w-[307px] h-[256px] p-[17px] text-[14px] rounded-[20px] border-[0.8px] border-outlineGray outline-none resize-none'

@@ -60,8 +60,9 @@ export default function Calendar({ handleToggle }) {
             className='w-[9px] h-[7px]'
             onClick={() => handlePrevMonth(selectedDate)}
           />
-          <p className='text-[15px] font-semibold text-darkNavy'>
-            {splited[0]}년 {splited[1]}월
+          <p className='text-[17px] font-semibold text-darkNavy'>
+            {dayjs(selectedDate).format('MMM')}{' '}
+            {dayjs(selectedDate).format('YYYY')}
           </p>
           <img
             src='/assets/rightArrow.svg'
