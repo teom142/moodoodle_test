@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
+import moodMonth from '../constants/moodMonth';
 
-const useRenderCalenderBoard = (selectedDay, handleSelectDate) => {
+const useRenderCalenderBoard = (selectedDay, handleSelectDate, arr, setArr) => {
   const initArr = (firstDay, daysInMonth) => {
     return Array.from({ length: firstDay + daysInMonth }, (v, i) =>
       i < firstDay
@@ -13,27 +14,36 @@ const useRenderCalenderBoard = (selectedDay, handleSelectDate) => {
     );
   };
 
-  const [arr, setArr] = useState([null]);
-
   useEffect(() => {
+    handleSelectDate(selectedDay);
     const firstDay = dayjs(selectedDay).startOf('month').day();
     const daysInMonth = dayjs(selectedDay).daysInMonth();
     setArr(initArr(firstDay, daysInMonth));
-    handleSelectDate(selectedDay);
+    console.log(arr);
     console.log(selectedDay);
   }, [selectedDay]);
 
   const content = arr.map((v, i) => (
     <div className='flex justify-center' key={v ? v.toString() : `${v}${i}`}>
-      {v && (
-        <div
-          className='flex justify-center items-center w-[22px] h-[22px] rounded-full bg-gray-scale-1 text-center cursor-pointer'
-          date={v}
-          onClick={() => handleSelectDate(v)}
-        >
-          {dayjs(v).date()}
-        </div>
-      )}
+      {v &&
+        (moodMonth.result[i - (arr.length - dayjs(selectedDay).daysInMonth())]
+          .isWrited === true ? (
+          <div
+            className={`flex justify-center items-center w-[22px] h-[22px] rounded-full bg-[#${moodMonth.result[i - (arr.length - dayjs(selectedDay).daysInMonth())].main_mood_color}] text-center cursor-pointer bg-opacity-80`}
+            date={v}
+            onClick={() => handleSelectDate(v)}
+          >
+            {dayjs(v).date()}
+          </div>
+        ) : (
+          <div
+            className='flex justify-center items-center w-[22px] h-[22px] rounded-full bg-gray-scale-1 text-center cursor-pointer'
+            date={v}
+            onClick={() => handleSelectDate(v)}
+          >
+            {dayjs(v).date()}
+          </div>
+        ))}
     </div>
   ));
 

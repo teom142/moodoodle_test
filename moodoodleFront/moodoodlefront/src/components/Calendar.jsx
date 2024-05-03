@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { useRecoilState } from 'recoil';
 import selectedDateState from '../stores/selectedDate';
@@ -11,12 +11,14 @@ const days = ['일', '월', '화', '수', '목', '금', '토'];
 export default function Calendar({ handleToggle }) {
   const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
   const splited = selectedDate.split('-');
+  const [YYYY_MM, setYYYY_MM] = useState(splited[0] + '-' + splited[1]);
+  const [arr, setArr] = useState([null]);
 
   const handleSelectDate = (v) => {
     setSelectedDate(v);
   };
 
-  const handlePrevMonth = () => {
+  const handlePrevMonth = (selectedDate) => {
     const newDate = dayjs(selectedDate)
       .subtract(1, 'month')
       .endOf('month')
@@ -24,7 +26,7 @@ export default function Calendar({ handleToggle }) {
     setSelectedDate(newDate);
   };
 
-  const handleNextMonth = () => {
+  const handleNextMonth = (selectedDate) => {
     const newDate = dayjs(selectedDate)
       .add(1, 'month')
       .startOf('month')
@@ -32,7 +34,21 @@ export default function Calendar({ handleToggle }) {
     setSelectedDate(newDate);
   };
 
-  const board = useRenderCalenderBoard(selectedDate, handleSelectDate);
+  const board = useRenderCalenderBoard(
+    selectedDate,
+    handleSelectDate,
+    arr,
+    setArr,
+  );
+
+  useEffect(() => {
+    setYYYY_MM(splited[0] + '-' + splited[1]);
+  }, [selectedDate]);
+
+  useEffect(() => {
+    console.log(YYYY_MM);
+    console.log(arr);
+  }, [YYYY_MM]);
 
   return (
     <div className='flex relative justify-center items-center w-[342px] h-[304px] rounded-[20px] shadow-componentShadow'>
@@ -42,7 +58,7 @@ export default function Calendar({ handleToggle }) {
             src='/assets/leftArrow.svg'
             alt='왼쪽 화살표'
             className='w-[9px] h-[7px]'
-            onClick={handlePrevMonth}
+            onClick={() => handlePrevMonth(selectedDate)}
           />
           <p className='text-[15px] font-semibold text-darkNavy'>
             {splited[0]}년 {splited[1]}월
@@ -51,7 +67,7 @@ export default function Calendar({ handleToggle }) {
             src='/assets/rightArrow.svg'
             alt='오른쪽 화살표'
             className='w-[9px] h-[7px]'
-            onClick={handleNextMonth}
+            onClick={() => handleNextMonth(selectedDate)}
           />
         </div>
         <div className='flex flex-col justify-between items-center w-[290px] h-[218px] border-t border-[#E4E5E7]'>
