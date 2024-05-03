@@ -4,19 +4,21 @@ import { RecoilRoot } from 'recoil';
 import Home from './pages/Home';
 import Main from './pages/Main';
 import DiaryWritePage from './pages/DiaryWritePage';
+import AnalysisPage from './pages/AnalysisPage';
 
 function App() {
   return (
     <RecoilRoot>
       <BrowserRouter>
         <div className='bg-slate-100'>
-          <section className='w-[390px] h-[844px] flex flex-col m-auto bg-white'>
+          <section className='w-[390px] flex flex-col m-auto bg-white'>
             <Pc className='flex flex-col m-auto'>
               <div className='flex-1'>
                 <Routes>
                   <Route exact path='/' element={<Home />}>
                     <Route path='/' element={<Main />} />
                     <Route path='/diary' element={<DiaryWritePage />} />
+                    <Route path='/analysis' element={<AnalysisPage />} />
                   </Route>
                 </Routes>
               </div>

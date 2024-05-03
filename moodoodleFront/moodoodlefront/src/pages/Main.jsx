@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import MainProfile from '../components/MainProfile';
+import { useOutletContext } from 'react-router-dom';
 import DiaryWritePopup from '../components/DiaryWritePopup';
 import Calendar from '../components/Calendar';
 import MoodColor from '../components/MoodColor';
 
-export default function Main({ isCalendar }) {
+export default function Main() {
+  const isCalendar = useOutletContext();
   const [isClick, setIsClick] = useState(false);
 
   function handleToggle() {
