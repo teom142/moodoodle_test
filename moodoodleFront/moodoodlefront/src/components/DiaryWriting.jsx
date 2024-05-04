@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import dayjs from 'dayjs';
 import CustomButton from './CustomButton';
 import { useNavigate } from 'react-router-dom';
 
 export default function DiaryWriting() {
   const navigate = useNavigate();
-  // const [date] = useState(dayjs().format('YYYY-MM-DD'));
+  const [date] = useState(dayjs().format('YYYY-MM-DD'));
   const [content, setContent] = useState('');
+
   const month = dayjs().format('MMM');
   const year = dayjs().format('YYYY');
   const day = dayjs().format('DD');
@@ -15,22 +17,23 @@ export default function DiaryWriting() {
     setContent(e.target.value);
   };
 
-  /*const handleSubmit = async () => {
+  const handleSubmit = async () => {
     const postData = {
       date,
       content,
     };
 
     try {
-      const response = await authAxios.post('/diary/create', postData);
+      const response = await axios.post('/diary/create', postData);
       console.log(response.data);
 
       setContent('');
-      navigate(-1);
+      localStorage.setItem('isWrited', true);
+      navigate('/analysis');
     } catch (error) {
       console.error('Error submitting post:', error);
     }
-  };*/
+  };
 
   return (
     <div className='flex justify-center items-center w-[342px] h-[456px] bg-white rounded-[20px] shadow-componentShadow'>
@@ -47,11 +50,7 @@ export default function DiaryWriting() {
           value={content}
           onChange={(e) => handleSetValue(e)}
         />
-        <CustomButton
-          text='등록하기'
-          color='pink'
-          onClick={() => navigate('/analysis')}
-        />
+        <CustomButton text='등록하기' color='pink' onClick={handleSubmit} />
       </div>
     </div>
   );

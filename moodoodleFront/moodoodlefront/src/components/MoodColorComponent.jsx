@@ -1,7 +1,7 @@
 import React from 'react';
 import colors from '../constants/colors';
 
-export default function MoodColorComponent({ handleToggle }) {
+export default function MoodColorComponent({ handleColorChipToggle }) {
   return (
     <div className='relative flex flex-col justify-center items-center w-[269px] h-[470px] gap-[26px] bg-white rounded-[20px]'>
       <div className='w-[217px] h-[45px] text-darkNavy font-semibold text-[23px] text-center border-b border-[#E4E5E7]'>
@@ -22,7 +22,7 @@ export default function MoodColorComponent({ handleToggle }) {
       <button
         className='absolute right-[15px] top-[15px]'
         type='button'
-        onClick={handleToggle}
+        onClick={handleColorChipToggle}
       >
         <img src='/assets/close.svg' alt='닫기' />
       </button>

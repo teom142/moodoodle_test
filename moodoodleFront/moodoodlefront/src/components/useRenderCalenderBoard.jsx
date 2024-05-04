@@ -1,8 +1,12 @@
-import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
+import dayjs from 'dayjs';
 import moodMonth from '../constants/moodMonth';
+import useMoodCalendar from '../hooks/useMoodCalendar';
 
 const useRenderCalenderBoard = (selectedDay, handleSelectDate, arr, setArr) => {
+  const { daysDiary, getMoodCalendar, moodcolorlist, setMoodcolorlist } =
+    useMoodCalendar();
+
   const initArr = (firstDay, daysInMonth) => {
     return Array.from({ length: firstDay + daysInMonth }, (v, i) =>
       i < firstDay
@@ -14,11 +18,19 @@ const useRenderCalenderBoard = (selectedDay, handleSelectDate, arr, setArr) => {
     );
   };
 
+  const moodColorArr = (firstDay, daysInMonth) => {
+    return Array.from({ length: firstDay + daysInMonth }, (v, i) =>
+      i < dayjs().date() ? moodcolorlist[i] : null,
+    );
+  };
+
   useEffect(() => {
     handleSelectDate(selectedDay);
     const firstDay = dayjs(selectedDay).startOf('month').day();
     const daysInMonth = dayjs(selectedDay).daysInMonth();
     setArr(initArr(firstDay, daysInMonth));
+    setMoodcolorlist(moodColorArr(firstDay, daysInMonth));
+    console.log(moodcolorlist);
     console.log(arr);
     console.log(selectedDay);
   }, [selectedDay]);
@@ -26,10 +38,12 @@ const useRenderCalenderBoard = (selectedDay, handleSelectDate, arr, setArr) => {
   const content = arr.map((v, i) => (
     <div className='flex justify-center' key={v ? v.toString() : `${v}${i}`}>
       {v &&
-        (moodMonth.result[i - (arr.length - dayjs(selectedDay).daysInMonth())]
-          .isWrited === true ? (
+        (moodcolorlist[i - (arr.length - dayjs(selectedDay).daysInMonth())] !==
+        null ? (
           <div
-            className={`flex justify-center items-center w-[22px] h-[22px] rounded-full bg-[#${moodMonth.result[i - (arr.length - dayjs(selectedDay).daysInMonth())].main_mood_color}] text-center cursor-pointer bg-opacity-80`}
+            className={`flex justify-center items-center w-[22px] h-[22px] rounded-full bg-[#${
+              moodcolorlist[i - (arr.length - dayjs(selectedDay).daysInMonth())]
+            }] text-center cursor-pointer bg-opacity-80`}
             date={v}
             onClick={() => handleSelectDate(v)}
           >

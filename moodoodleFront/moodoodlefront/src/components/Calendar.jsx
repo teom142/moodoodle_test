@@ -6,10 +6,13 @@ import useRenderCalenderBoard from './useRenderCalenderBoard';
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
 
-export default function Calendar({ handleToggle }) {
+export default function Calendar({ handleColorChipToggle }) {
   const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
   const splited = selectedDate.split('-');
-  const [YYYY_MM, setYYYY_MM] = useState(splited[0] + '-' + splited[1]);
+  const [year_month, setYear_month] = useState({
+    year: splited[0],
+    month: splited[1],
+  });
   const [arr, setArr] = useState([null]);
 
   const handleSelectDate = (v) => {
@@ -40,13 +43,13 @@ export default function Calendar({ handleToggle }) {
   );
 
   useEffect(() => {
-    setYYYY_MM(splited[0] + '-' + splited[1]);
+    setYear_month({ year: splited[0], month: splited[1] });
   }, [selectedDate]);
 
   useEffect(() => {
-    console.log(YYYY_MM);
+    console.log(year_month);
     console.log(arr);
-  }, [YYYY_MM]);
+  }, [year_month]);
 
   return (
     <div className='flex relative justify-center items-center w-[342px] h-[304px] rounded-[20px] shadow-componentShadow'>
@@ -85,7 +88,7 @@ export default function Calendar({ handleToggle }) {
       <button
         className='absolute right-[15px] bottom-[15px]'
         type='button'
-        onClick={handleToggle}
+        onClick={handleColorChipToggle}
       >
         <img src='/assets/more.svg' alt='컬러칩 보기' />
       </button>

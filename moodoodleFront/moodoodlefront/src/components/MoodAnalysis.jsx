@@ -1,9 +1,9 @@
 import React from 'react';
 import MoodHashTag from './MoodHashTag';
 
-export default function MoodAnalysis() {
+export default function MoodAnalysis({ isModal, handleDateToggle }) {
   return (
-    <div className='flex flex-col justify-center items-center w-[342px] h-[472px] rounded-[20px] bg-white shadow-componentShadow'>
+    <div className='relative flex flex-col justify-center items-center w-[342px] h-[472px] rounded-[20px] bg-white shadow-componentShadow'>
       <div className='flex flex-col h-[409px] justify-between items-center'>
         <div className='flex flex-col h-[200px] justify-between items-center'>
           <p className='font-bold text-normal text-darkNavy'>감정 태그</p>
@@ -37,6 +37,17 @@ export default function MoodAnalysis() {
           </div>
         </div>
       </div>
+      {isModal ? (
+        <button
+          type='button'
+          onClick={handleDateToggle}
+          className='absolute top-[19px] right-[22px]'
+        >
+          <img src='/assets/close.svg' alt='닫기' />
+        </button>
+      ) : (
+        ''
+      )}
     </div>
   );
 }

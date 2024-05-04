@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import DiaryWritePopup from '../components/DiaryWritePopup';
 import Calendar from '../components/Calendar';
+import DiaryShow from '../components/DiaryShow';
 
 export default function Main() {
   const context = useOutletContext();
+  const [isWrited] = useState(localStorage.getItem('isWrited'));
 
   return (
     <div className='relative'>
@@ -12,9 +14,9 @@ export default function Main() {
         {context.isCalendar ? (
           ''
         ) : (
-          <Calendar handleToggle={context.handleToggle} />
+          <Calendar handleColorChipToggle={context.handleColorChipToggle} />
         )}
-        <DiaryWritePopup />
+        {isWrited ? <DiaryShow /> : <DiaryWritePopup />}
       </div>
     </div>
   );
