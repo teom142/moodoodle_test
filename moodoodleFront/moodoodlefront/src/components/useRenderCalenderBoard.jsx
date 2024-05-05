@@ -4,8 +4,7 @@ import moodMonth from '../constants/moodMonth';
 import useMoodCalendar from '../hooks/useMoodCalendar';
 
 const useRenderCalenderBoard = (selectedDay, handleSelectDate, arr, setArr) => {
-  const { daysDiary, getMoodCalendar, moodcolorlist, setMoodcolorlist } =
-    useMoodCalendar();
+  const { moodcolorlist, setMoodcolorlist } = useMoodCalendar();
 
   const initArr = (firstDay, daysInMonth) => {
     return Array.from({ length: firstDay + daysInMonth }, (v, i) =>
@@ -24,14 +23,20 @@ const useRenderCalenderBoard = (selectedDay, handleSelectDate, arr, setArr) => {
     );
   };
 
+  const main_mood_color_list = (firstDay, daysInMonth) => {
+    return dayjs(selectedDay).month() === dayjs().month()
+      ? setMoodcolorlist(moodColorArr(firstDay, daysInMonth))
+      : moodcolorlist;
+  };
+
   useEffect(() => {
     handleSelectDate(selectedDay);
+    localStorage.setItem('selectedDay', selectedDay);
     const firstDay = dayjs(selectedDay).startOf('month').day();
     const daysInMonth = dayjs(selectedDay).daysInMonth();
     setArr(initArr(firstDay, daysInMonth));
-    setMoodcolorlist(moodColorArr(firstDay, daysInMonth));
+    main_mood_color_list(firstDay, daysInMonth);
     console.log(moodcolorlist);
-    console.log(arr);
     console.log(selectedDay);
   }, [selectedDay]);
 

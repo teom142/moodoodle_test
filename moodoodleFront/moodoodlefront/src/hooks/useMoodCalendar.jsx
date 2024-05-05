@@ -28,10 +28,10 @@ export default function useMoodCalendar() {
       main_mood_color: 'FBCFE0',
     },
     {
-      diary_id: 5,
+      diary_id: 6,
       date: '2024-04-04',
-      content: '행복하당 ......',
-      main_mood_color: 'FBCFE0',
+      content: '이것이 오늘이다 ......',
+      main_mood_color: 'B5D3FF',
     },
   ]);
 
@@ -40,6 +40,7 @@ export default function useMoodCalendar() {
     'FBCFE0',
     null,
     'FBCFE0',
+    'B5D3FF',
   ]);
 
   const getMoodColorList = (daysDiary) => {
@@ -49,11 +50,15 @@ export default function useMoodCalendar() {
     return moodcolorlist;
   };
 
-  const getMoodCalendar = async (body, year, month) => {
+  const getMoodCalendar = async (year, month) => {
     try {
       const getMoodCalendarResponse = await axios.get(
         `/diary/month/${year}/${month}`,
-        body,
+        {
+          user_id: localStorage.getItem('user_id'),
+          year: { year },
+          month: { month },
+        },
       );
       setDaysDiary(getMoodCalendarResponse.result);
       getMoodColorList(daysDiary);

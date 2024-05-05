@@ -6,34 +6,32 @@ import { useNavigate } from 'react-router-dom';
 
 export default function DiaryWriting() {
   const navigate = useNavigate();
-  const [date] = useState(dayjs().format('YYYY-MM-DD'));
   const [content, setContent] = useState('');
-
-  const month = dayjs().format('MMM');
-  const year = dayjs().format('YYYY');
-  const day = dayjs().format('DD');
+  const selectedDay = localStorage.getItem('selectedDay');
 
   const handleSetValue = (e) => {
     setContent(e.target.value);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
+    navigate(`/analysis/${selectedDay}`);
+  };
+  /*const handleSubmit = async () => {
     const postData = {
-      date,
-      content,
+      user_id: localStorage.getItem('user_id'),
+      date: selectedDay,
+      content: content,
     };
-
     try {
       const response = await axios.post('/diary/create', postData);
       console.log(response.data);
 
       setContent('');
-      localStorage.setItem('isWrited', true);
       navigate('/analysis');
     } catch (error) {
       console.error('Error submitting post:', error);
     }
-  };
+  };*/
 
   return (
     <div className='flex justify-center items-center w-[342px] h-[456px] bg-white rounded-[20px] shadow-componentShadow'>
@@ -41,7 +39,9 @@ export default function DiaryWriting() {
         <div className='flex flex-col h-[46px] justify-between items-center'>
           <p className='font-bold text-base text-darkNavy'>일기 쓰기</p>
           <p className='font-medium text-sm text-darkGray'>
-            {month}. {day}, {year}
+            {dayjs(selectedDay).format('MMM')}.{' '}
+            {dayjs(selectedDay).format('DD')},{' '}
+            {dayjs(selectedDay).format('YYYY')}
           </p>
         </div>
         <textarea
@@ -50,7 +50,11 @@ export default function DiaryWriting() {
           value={content}
           onChange={(e) => handleSetValue(e)}
         />
-        <CustomButton text='등록하기' color='pink' onClick={handleSubmit} />
+        <CustomButton
+          text='등록 및 분석하기'
+          color='pink'
+          onClick={handleSubmit}
+        />
       </div>
     </div>
   );

@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { useRecoilState } from 'recoil';
-import selectedDateState from '../stores/selectedDate';
 import useRenderCalenderBoard from './useRenderCalenderBoard';
+import useMoodCalendar from '../hooks/useMoodCalendar';
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
 
-export default function Calendar({ handleColorChipToggle }) {
-  const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
+export default function Calendar({
+  handleColorChipToggle,
+  selectedDate,
+  setSelectedDate,
+}) {
   const splited = selectedDate.split('-');
   const [year_month, setYear_month] = useState({
     year: splited[0],
     month: splited[1],
   });
   const [arr, setArr] = useState([null]);
+  const { daysDiary, getMoodCalendar } = useMoodCalendar();
 
   const handleSelectDate = (v) => {
     setSelectedDate(v);
@@ -47,8 +50,8 @@ export default function Calendar({ handleColorChipToggle }) {
   }, [selectedDate]);
 
   useEffect(() => {
+    getMoodCalendar(year_month.year, year_month.month);
     console.log(year_month);
-    console.log(arr);
   }, [year_month]);
 
   return (

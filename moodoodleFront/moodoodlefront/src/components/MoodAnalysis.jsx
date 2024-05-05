@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MoodHashTag from './MoodHashTag';
+import useDiaryAnalysis from '../hooks/useDiaryAnalysis';
+import useProfile from '../hooks/useProfile';
 
-export default function MoodAnalysis({ isModal, handleDateToggle }) {
+export default function MoodAnalysis({ isModal, handleDateToggle, diary_id }) {
+  const { analysisResult, getDiaryAnalysis } = useDiaryAnalysis();
+  const { profile } = useProfile();
+
+  useEffect(() => {
+    getDiaryAnalysis(diary_id);
+  }, [localStorage.getItem('selectedDay')]);
+
   return (
     <div className='relative flex flex-col justify-center items-center w-[342px] h-[472px] rounded-[20px] bg-white shadow-componentShadow'>
       <div className='flex flex-col h-[409px] justify-between items-center'>
@@ -10,7 +19,7 @@ export default function MoodAnalysis({ isModal, handleDateToggle }) {
           <div className='flex flex-col h-[102px] justify-between items-center'>
             <div className='w-[50px] h-[50px] rounded-full bg-darkGray' />
             <div className='text-darkGray text-center text-[13px] whitespace-pre-line'>
-              [무두들러]님의 오늘 느낀 감정은 <br />
+              [{profile.nickname}]님의 오늘 느낀 감정은 <br />
               [행복]이 65% [슬픔]이 15% [힘듦]이 10%예요!
             </div>
           </div>

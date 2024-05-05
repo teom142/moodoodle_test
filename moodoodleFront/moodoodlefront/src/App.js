@@ -17,8 +17,14 @@ function App() {
                 <Routes>
                   <Route exact path='/' element={<Home />}>
                     <Route path='/' element={<Main />} />
-                    <Route path='/diary' element={<DiaryWritePage />} />
-                    <Route path='/analysis' element={<AnalysisPage />} />
+                    <Route
+                      path='/diary/:selectedDate'
+                      element={<DiaryWritePage />}
+                    />
+                    <Route
+                      path='/analysis/:selectedDate'
+                      element={<AnalysisPage />}
+                    />
                   </Route>
                 </Routes>
               </div>

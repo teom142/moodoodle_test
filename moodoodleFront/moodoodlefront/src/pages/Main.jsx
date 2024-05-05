@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import DiaryWritePopup from '../components/DiaryWritePopup';
 import Calendar from '../components/Calendar';
 import DiaryShow from '../components/DiaryShow';
+import useMoodCalendar from '../hooks/useMoodCalendar';
+import selectedDateState from '../stores/selectedDate';
 
 export default function Main() {
   const context = useOutletContext();
-  const [isWrited] = useState(localStorage.getItem('isWrited'));
+  const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
+  const splited = selectedDate.split('-');
+  const date = parseInt(splited[2]) - 1;
+  const { daysDiary } = useMoodCalendar();
 
   return (
     <div className='relative'>
@@ -14,9 +20,24 @@ export default function Main() {
         {context.isCalendar ? (
           ''
         ) : (
-          <Calendar handleColorChipToggle={context.handleColorChipToggle} />
+          <Calendar
+            handleColorChipToggle={context.handleColorChipToggle}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+          />
         )}
-        {isWrited ? <DiaryShow /> : <DiaryWritePopup />}
+        {daysDiary.length < date + 1 ? (
+          <DiaryWritePopup selectedDate={selectedDate} />
+        ) : daysDiary[date].content ? (
+          <DiaryShow
+            content={daysDiary[date].content}
+            selectedDate={selectedDate}
+            text='분석 결과 보기'
+            color='orange'
+          />
+        ) : (
+          <DiaryWritePopup selectedDate={selectedDate} />
+        )}
       </div>
     </div>
   );
