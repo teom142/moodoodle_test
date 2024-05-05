@@ -34,7 +34,7 @@ class DiaryManager(models.Manager):
 
 class Diary(models.Model):
     diary_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(users, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(users, on_delete=models.CASCADE, db_column='user_id')
     date = models.DateField()
     content = models.TextField()
     objects = DiaryManager()
@@ -50,7 +50,7 @@ class DiaryMoodManager(models.Manager):
 
 class Diary_Mood(models.Model):
     diary_mood_id = models.AutoField(primary_key=True)
-    diary_id = models.ForeignKey(Diary, on_delete=models.CASCADE)
+    diary_id = models.ForeignKey(Diary, on_delete=models.CASCADE, db_column='diary_id')
     title = models.CharField(max_length=20)
     ratio = models.IntegerField(default=0)
     color = models.CharField(max_length=6)
