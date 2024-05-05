@@ -1,7 +1,9 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Mobile, Pc } from "./responsive";
 import Header from "./components/Header";
 import Main from "./pages/Main";
+import DiaryWritePage from "./pages/DiaryWritePage";
+
 function App() {
   return (
     <BrowserRouter>
@@ -9,9 +11,11 @@ function App() {
         <section className="w-[390px] h-[844px] flex flex-col m-auto bg-white">
           <Pc className="flex flex-col m-auto">
             <Header />
-            <div className="">
-              <Main />
-              <p>이것은 컴퓨터다.</p>
+            <div className="flex-1">
+              <Routes>
+                <Route path="/" element={<Main />} />
+                <Route path="/diary" element={<DiaryWritePage />} />
+              </Routes>
             </div>
           </Pc>
           <Mobile className="flex flex-col m-auto">
