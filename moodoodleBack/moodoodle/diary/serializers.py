@@ -1,6 +1,6 @@
 from rest_framework import serializers
+from .models import Diary, diary_mood
 
-from .models import Diary
 class DiaryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
@@ -34,3 +34,13 @@ class DiaryUpdateSerializer(serializers.ModelSerializer):
         if existing_diary:
             raise serializers.ValidationError("이미 이 날짜에 작성된 일기가 있습니다.")
         return data
+    
+class MonthlyCalendarSerializer(serializers.ModelSerializer):
+    main_mood_color = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Diary
+        fields = ('diary_id', 'date', 'content', 'main_mood_color')
+
+    def get_main_mood_color(self, obj):
+        return None

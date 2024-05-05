@@ -39,3 +39,13 @@ class Diary(models.Model):
     objects = DiaryManager()
     class Meta:
         db_table = 'diary'
+        
+class diary_mood(models.Model):
+    dairy_mood_id = models.AutoField(primary_key=True)
+    diary_id = models.ForeignKey(Diary, on_delete=models.CASCADE)
+    title = models.CharField(max_length=20)
+    ratio = models.SmallIntegerField()
+    mood_color = models.CharField(max_length=20)
+
+    class Meta:
+        db_table = 'diary_mood'
