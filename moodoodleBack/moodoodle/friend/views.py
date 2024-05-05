@@ -4,23 +4,34 @@ from user.models import users
 from .models import friend
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import FriendListSerializer
 
-class FriendListView(APIView):
-    permission_classes = (IsAuthenticated,)
+class FriendListView(ListAPIView):
+    serializer_class = FriendListSerializer
+    # permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-            user_id = request.user.id
-            user_friends = friend.objects.filter(from_user_id=user_id) or friend.objects.filter(to_user_id=user_id)
-            friends_list = []
-            for friends in user_friends:
-                if friend.objects.filter(to_user_id=friends.from_user_id, from_user_id=friends.to_user_id).exists():
-                    friends_list.append(friends.to_user_id)
-            user = users.object.filter(pk__in=friends_list)
-            serializer = FriendListSerializer(user, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        user_id = self.request.user.id
+        user_friends = friend.objects.filter(from_user_id=user_id) or friend.objects.filter(to_user_id=user_id)
+        friends_list = []
+
+        for friends in user_friends:
+            if friend.objects.filter(to_user_id=friends.from_user_id, from_user_id=friends.to_user_id).exists():
+                friends_list.append(friends.to_user_id)
+        return users.object.filter(pk__in=friends_list)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.serializer_class(queryset, many=True)
+        return Response({
+            'success' : True,
+            'status code': status.HTTP_200_OK,
+            'message': '요청에 성공하였습니다.',
+            'result': serializer.data
+        }, status=status.HTTP_200_OK)
 
 class FriendSearchView(APIView):
     def get(self, request, to_user_id):
