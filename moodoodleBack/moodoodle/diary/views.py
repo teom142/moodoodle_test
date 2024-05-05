@@ -121,15 +121,15 @@ class DiaryDetailView(APIView):
             #         'status code': status.HTTP_403_FORBIDDEN,
             #         'message' : "일기 접근 권한이 없습니다."
             #     }, status=status.HTTP_403_FORBIDDEN)
-
-            diary_mood_list = Diary_Mood.objects.filter(diary_id=diary_id)
-            serializer = self.serializer_class(diary_mood_list, many=True)
-            return Response({
+            serializer = DiaryDetailSerializer(diary)
+            response_data = {
                 'success' : True,
                 'status code': status.HTTP_200_OK,
                 'message' : "요청에 성공하였습니다.",
-                'data' : serializer.data
-            }, status=status.HTTP_200_OK)
+                'diary_id' : diary_id,
+                'detail' : serializer.data['detail']
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
         except Diary_Mood.DoesNotExist:
             return Response({
                 'success' : False,
