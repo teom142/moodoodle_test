@@ -1,13 +1,11 @@
 # friend views.py
-from django.shortcuts import get_object_or_404
 from user.models import users
 from .models import friend
 from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import FriendListSerializer
+from .serializers import FriendSerializer, FriendListSerializer
 
 class FriendListView(ListAPIView):
     serializer_class = FriendListSerializer
@@ -26,31 +24,93 @@ class FriendListView(ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(queryset, many=True)
-        return Response({
+        response = {
             'success' : True,
             'status code': status.HTTP_200_OK,
             'message': '요청에 성공하였습니다.',
             'result': serializer.data
-        }, status=status.HTTP_200_OK)
+        }
+        return Response(response, status=status.HTTP_200_OK)
 
-class FriendSearchView(APIView):
-    def get(self, request, to_user_id):
-        user = get_object_or_404(users, pk=to_user_id)
-        serializer = FriendListSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class FriendSearchView(RetrieveAPIView):
+    queryset = users.object.all()
+    serializer_class = FriendListSerializer
+    lookup_field = 'id'
 
-class FriendAddView(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            obj = self.get_object()
+            serializer = self.get_serializer(obj)
+            response = {
+                'success': True,
+                'status_code': status.HTTP_200_OK,
+                'message': '요청에 성공하였습니다.',
+                'nickname': serializer.data.get('nickname'),
+                'profile_image': serializer.data.get('profile_image'),
+                'description': serializer.data.get('description')
+            }
+            return Response(response, status=status.HTTP_200_OK)
+        except users.DoesNotExist:
+            response = {
+                'success' : False,
+                'status code': status.HTTP_404_NOT_FOUND,
+                'message': '유저를 찾을 수 없습니다.',
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+
+
+class FriendAddView(CreateAPIView):
+    # permission_classes = [IsAuthenticated]
+    serializer_class = FriendSerializer
+
     def post(self, request, to_user_id):
         from_user = request.user
-        to_user = get_object_or_404(users, pk=to_user_id)
-        friend.objects.create(from_user=from_user, to_user=to_user)
-        return Response(status=status.HTTP_201_CREATED)
 
-class FriendDeleteView(APIView):
+        try:
+            to_user = users.object.get(pk=to_user_id)
+        except users.DoesNotExist:
+            response = {
+                'success' : False,
+                'status code': status.HTTP_404_NOT_FOUND,
+                'message': '유저를 찾을 수 없습니다.',
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = self.serializer_class(data={'from_user': from_user.pk, 'to_user': to_user.pk})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        response = {
+            'success': True,
+            'status_code': status.HTTP_201_CREATED,
+            'message': '요청에 성공하였습니다.'
+        }
+        return Response(response, status=status.HTTP_201_CREATED)
+
+class FriendDeleteView(DestroyAPIView):
+    # permission_classes = [IsAuthenticated]
+    serializer_class = FriendSerializer
+
     def delete(self, request, to_user_id):
         from_user = request.user
-        friends = get_object_or_404(friend, from_user=from_user, to_user_id=to_user_id)
-        friends.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        try:
+            friends1 = friend.objects.get(from_user=from_user, to_user_id=to_user_id)
+            friends2 = friend.objects.get(from_user_id=to_user_id, to_user=from_user)
+        except friend.DoesNotExist:
+            response = {
+                'success' : False,
+                'status code': status.HTTP_404_NOT_FOUND,
+                'message': '유저를 찾을 수 없습니다.',
+            }
+            return Response(response, status=status.HTTP_404_NOT_FOUND)
+        
+        friends1.delete()
+        friends2.delete()
+        response = {
+            'success': True,
+            'status_code': status.HTTP_204_NO_CONTENT,
+            'message': '요청에 성공하였습니다.'
+        }
+        return Response(response, status=status.HTTP_204_NO_CONTENT)
 
 # 예외 처리, 친구 추가 알람, 달력 조회 추가
