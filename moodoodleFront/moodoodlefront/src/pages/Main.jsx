@@ -34,6 +34,7 @@ export default function Main() {
             selectedDate={selectedDate}
             text='분석 결과 보기'
             color='orange'
+            handleDayMoodAnalysisToggle={context.handleDayMoodAnalysisToggle}
           />
         ) : (
           <DiaryWritePopup selectedDate={selectedDate} />

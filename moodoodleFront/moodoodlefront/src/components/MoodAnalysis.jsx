@@ -4,7 +4,11 @@ import useDiaryAnalysis from '../hooks/useDiaryAnalysis';
 import useProfile from '../hooks/useProfile';
 import colorsByCode from '../constants/colorsByCode';
 
-export default function MoodAnalysis({ isModal, handleDateToggle, diary_id }) {
+export default function MoodAnalysis({
+  isModal,
+  handleDayMoodAnalysisToggle,
+  diary_id,
+}) {
   const { analysisResult, getDiaryAnalysis } = useDiaryAnalysis();
   const { profile } = useProfile();
 
@@ -73,7 +77,7 @@ export default function MoodAnalysis({ isModal, handleDateToggle, diary_id }) {
       {isModal ? (
         <button
           type='button'
-          onClick={handleDateToggle}
+          onClick={handleDayMoodAnalysisToggle}
           className='absolute top-[19px] right-[22px]'
         >
           <img src='/assets/close.svg' alt='닫기' />

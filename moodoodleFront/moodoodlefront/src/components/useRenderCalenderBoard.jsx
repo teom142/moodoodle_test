@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
-import moodMonth from '../constants/moodMonth';
 import useMoodCalendar from '../hooks/useMoodCalendar';
 
 const useRenderCalenderBoard = (selectedDay, handleSelectDate, arr, setArr) => {

@@ -14,7 +14,7 @@ export default function Home() {
     setIsClick((prev) => !prev);
   }
 
-  function handleDateToggle() {
+  function handleDayMoodAnalysisToggle() {
     setIsDateClick((prev) => !prev);
   }
 
@@ -29,12 +29,21 @@ export default function Home() {
           ''
         )}
         {isDateClick ? (
-          <MoodAnalysisModal isModal handleDateToggle={handleDateToggle} />
+          <MoodAnalysisModal
+            isModal
+            handleDayMoodAnalysisToggle={handleDayMoodAnalysisToggle}
+          />
         ) : (
           ''
         )}
         <Outlet
-          context={{ isCalendar, isClick, setIsClick, handleColorChipToggle }}
+          context={{
+            isCalendar,
+            isClick,
+            setIsClick,
+            handleColorChipToggle,
+            handleDayMoodAnalysisToggle,
+          }}
         />
       </div>
     </>
