@@ -42,7 +42,9 @@ class Diary(models.Model):
         db_table = 'diary'
 
 class DiaryMoodManager(models.Manager):
-    def get_mood(self, diary_id):
+    def get_mood(self, user_id, diary_id):
+        if not user_id:
+            raise ValidationError('로그인이 필요합니다')
         if not diary_id:
             raise ValidationError('일기가 존재하지 않습니다')
         diary_mood_list = self.filter(diary_id=diary_id)

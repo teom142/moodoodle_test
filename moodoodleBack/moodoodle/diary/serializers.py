@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Diary
+from .models import Diary, Diary_Mood
 class DiaryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
@@ -28,9 +28,13 @@ class DiaryUpdateSerializer(serializers.ModelSerializer):
         date = data.get('date')
         diary_id = self.instance.diary_id if self.instance else None
         diary = Diary.objects.get(diary_id=diary_id)
-        if user_id != diary.user_id:
-            raise serializers.ValidationError("다른 사용자의 일기를 수정할 수 없습니다.")
         existing_diary = Diary.objects.filter(user_id=user_id, date=date).exclude(diary_id=diary_id).first()
         if existing_diary:
             raise serializers.ValidationError("이미 이 날짜에 작성된 일기가 있습니다.")
         return data
+
+class DiaryDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Diary_Mood
+        fields = ('diary_id', 'diary_mood_id', 'title', 'ratio', 'color')
+        # read_only_fields = ('diary_mood_id','diary_id')
