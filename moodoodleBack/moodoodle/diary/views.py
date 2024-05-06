@@ -8,9 +8,7 @@ from rest_framework.views import APIView
 
 from . import serializers
 from .models import Diary, Diary_Mood
-from .serializers import DiaryCreateSerializer, DiaryUpdateSerializer, DiaryDetailSerializer,serializers
-from .models import Diary
-from .serializers import DiaryCreateSerializer, DiaryUpdateSerializer, serializers, MonthlyCalendarSerializer
+from .serializers import DiaryCreateSerializer, DiaryUpdateSerializer, DiaryDetailSerializer, serializers, MonthlyCalendarSerializer
 from calendar import monthrange
 from datetime import date, timedelta
 
@@ -159,7 +157,7 @@ class MonthlyCalendarView(ListAPIView):
         current_date = date.today()
 
         if date(year, month, 1) > current_date:
-            raise ValueError("미래의 날짜는 접근 불가능합니다.")
+            raise ValueError("접근 불가능한 날짜입니다.")
 
         return Diary.objects.filter(date__range=(start_date, end_date))
 

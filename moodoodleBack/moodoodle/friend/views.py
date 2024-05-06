@@ -1,6 +1,6 @@
 # friend views.py
 from user.models import users
-from .models import friend
+from .models import Friend
 from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView
 from rest_framework.response import Response
@@ -13,11 +13,11 @@ class FriendListView(ListAPIView):
 
     def get_queryset(self):
         user_id = self.request.user.id
-        user_friends = friend.objects.filter(from_user_id=user_id) or friend.objects.filter(to_user_id=user_id)
+        user_friends = Friend.objects.filter(from_user_id=user_id) or Friend.objects.filter(to_user_id=user_id)
         friends_list = []
 
         for friends in user_friends:
-            if friend.objects.filter(to_user_id=friends.from_user_id, from_user_id=friends.to_user_id).exists():
+            if Friend.objects.filter(to_user_id=friends.from_user_id, from_user_id=friends.to_user_id).exists():
                 friends_list.append(friends.to_user_id)
         return users.object.filter(pk__in=friends_list)
 
@@ -94,9 +94,9 @@ class FriendDeleteView(DestroyAPIView):
         from_user = request.user
 
         try:
-            friends1 = friend.objects.get(from_user=from_user, to_user_id=to_user_id)
-            friends2 = friend.objects.get(from_user_id=to_user_id, to_user=from_user)
-        except friend.DoesNotExist:
+            friends1 = Friend.objects.get(from_user=from_user, to_user_id=to_user_id)
+            friends2 = Friend.objects.get(from_user_id=to_user_id, to_user=from_user)
+        except Friend.DoesNotExist:
             response = {
                 'success' : False,
                 'status code': status.HTTP_404_NOT_FOUND,

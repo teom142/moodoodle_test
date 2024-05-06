@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from .models import Diary
+from .models import Diary, Diary_Mood
+from collections import defaultdict
+
 class DiaryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
@@ -36,6 +38,7 @@ class DiaryMoodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary_Mood
         fields = ('diary_mood_id', 'title', 'ratio', 'color', 'diary_id')
+        
 class DiaryDetailSerializer(serializers.ModelSerializer):
     detail = serializers.SerializerMethodField()
     class Meta:
@@ -89,7 +92,7 @@ class MonthlyCalendarSerializer(serializers.ModelSerializer):
             'FF9191': ['화남', '짜증', '분노', '예민']
         }
         main_mood_ratio = defaultdict(int)
-        mood_list = diary_mood.objects.filter(diary_id=obj)
+        mood_list = Diary_Mood.objects.filter(diary_id=obj)
         for mood in mood_list:
             for color, tag in mood_colors.items():
                 if mood.title in tag:

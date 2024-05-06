@@ -1,11 +1,11 @@
 # friend serializers.py
 from rest_framework import serializers
 from user.models import users
-from .models import friend
+from .models import Friend
 
 class FriendSerializer(serializers.ModelSerializer):
     class Meta:
-        model = friend
+        model = Friend
         fields = ('from_user', 'to_user')
         
 class FriendListSerializer(serializers.ModelSerializer):

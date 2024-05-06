@@ -2,7 +2,7 @@
 from django.db import models
 from user.models import users
 
-class friend(models.Model):
+class Friend(models.Model):
     friend_id = models.AutoField(primary_key=True)
     from_user = models.ForeignKey(users, on_delete=models.CASCADE, related_name='sent_friend')
     to_user = models.ForeignKey(users, on_delete=models.CASCADE, related_name='received_friend')
