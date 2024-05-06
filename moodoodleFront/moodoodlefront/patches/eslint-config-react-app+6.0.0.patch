@@ -1,0 +1,139 @@
+diff --git a/node_modules/eslint-config-react-app/README.md b/node_modules/eslint-config-react-app/README.md
+index 3733239..daacb2c 100644
+--- a/node_modules/eslint-config-react-app/README.md
++++ b/node_modules/eslint-config-react-app/README.md
+@@ -16,10 +16,10 @@ The easiest way to use this configuration is with [Create React App](https://git
+ 
+ If you want to use this ESLint configuration in a project not built with Create React App, you can install it with the following steps.
+ 
+-First, install this package and ESLint.
++First, install this package, ESLint and the necessary plugins.
+ 
+ ```sh
+-npm install --save-dev eslint-config-react-app eslint@^8.0.0
++npm install --save-dev eslint-config-react-app @typescript-eslint/eslint-plugin@^4.0.0 @typescript-eslint/parser@^4.0.0 babel-eslint@^10.0.0 eslint@^7.5.0 eslint-plugin-flowtype@^5.2.0 eslint-plugin-import@^2.22.0 eslint-plugin-jsx-a11y@^6.3.1 eslint-plugin-react@^7.20.3 eslint-plugin-react-hooks@^4.0.8
+ ```
+ 
+ Then create a file named `.eslintrc.json` with following contents in the root folder of your project:
+@@ -30,13 +30,19 @@ Then create a file named `.eslintrc.json` with following contents in the root fo
+ }
+ ```
+ 
+-That's it! You can override the settings from `eslint-config-react-app` by editing the `.eslintrc.json` file. Learn more about [configuring ESLint](https://eslint.org/docs/user-guide/configuring) on the ESLint website.
++That's it! You can override the settings from `eslint-config-react-app` by editing the `.eslintrc.json` file. Learn more about [configuring ESLint](http://eslint.org/docs/user-guide/configuring) on the ESLint website.
+ 
+ ## Jest rules
+ 
+ This config also ships with optional Jest rules for ESLint (based on [`eslint-plugin-jest`](https://github.com/jest-community/eslint-plugin-jest)).
+ 
+-You can enable these rules by adding the Jest config to the `extends` array in your ESLint config.
++You'll first need to add the ESLint plugin for Jest (if you don't already have it installed).
++
++```sh
++npm install --save-dev eslint-plugin-jest@^24.0.0 eslint-plugin-testing-library&^3.9.0
++```
++
++You can then enable these rules by adding the Jest config to the `extends` array in your ESLint config.
+ 
+ ```json
+ {
+diff --git a/node_modules/eslint-config-react-app/base.js b/node_modules/eslint-config-react-app/base.js
+index 6cb8e9e..cc94bf4 100644
+--- a/node_modules/eslint-config-react-app/base.js
++++ b/node_modules/eslint-config-react-app/base.js
+@@ -7,9 +7,6 @@
+ 
+ 'use strict';
+ 
+-// Fix eslint shareable config (https://github.com/eslint/eslint/issues/3458)
+-require('@rushstack/eslint-patch/modern-module-resolution');
+-
+ // This file contains the minimum ESLint configuration required for Create
+ // React App support, and is used as the `baseConfig` for `eslint-loader`
+ // to ensure that user-provided configs don't need this boilerplate.
+@@ -30,10 +27,10 @@ module.exports = {
+   },
+ 
+   parserOptions: {
++    ecmaVersion: 2018,
+     sourceType: 'module',
+-    requireConfigFile: false,
+-    babelOptions: {
+-      presets: [require.resolve('babel-preset-react-app/prod')],
++    ecmaFeatures: {
++      jsx: true,
+     },
+   },
+ 
+diff --git a/node_modules/eslint-config-react-app/index.js b/node_modules/eslint-config-react-app/index.js
+index 8272d88..06e9fb6 100644
+--- a/node_modules/eslint-config-react-app/index.js
++++ b/node_modules/eslint-config-react-app/index.js
+@@ -140,8 +140,8 @@ module.exports = {
+       },
+     ],
+     'no-multi-str': 'warn',
+-    'no-global-assign': 'warn',
+-    'no-unsafe-negation': 'warn',
++    'no-native-reassign': 'warn',
++    'no-negated-in-lhs': 'warn',
+     'no-new-func': 'warn',
+     'no-new-object': 'warn',
+     'no-new-symbol': 'warn',
+@@ -280,7 +280,7 @@ module.exports = {
+     'jsx-a11y/role-supports-aria-props': 'warn',
+     'jsx-a11y/scope': 'warn',
+ 
+-    // https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
++    // https://github.com/facebook/react/tree/master/packages/eslint-plugin-react-hooks
+     'react-hooks/rules-of-hooks': 'error',
+ 
+     // https://github.com/gajus/eslint-plugin-flowtype
+diff --git a/node_modules/eslint-config-react-app/jest.js b/node_modules/eslint-config-react-app/jest.js
+index af83e98..2890686 100644
+--- a/node_modules/eslint-config-react-app/jest.js
++++ b/node_modules/eslint-config-react-app/jest.js
+@@ -7,9 +7,6 @@
+ 
+ 'use strict';
+ 
+-// Fix eslint shareable config (https://github.com/eslint/eslint/issues/3458)
+-require('@rushstack/eslint-patch/modern-module-resolution');
+-
+ // We use eslint-loader so even warnings are very visible.
+ // This is why we prefer to use "WARNING" level for potential errors,
+ // and we try not to use "ERROR" level at all.
+@@ -31,7 +28,7 @@ module.exports = {
+         'jest/no-jasmine-globals': 'error',
+         'jest/no-jest-import': 'error',
+         'jest/no-mocks-import': 'error',
+-        'jest/valid-describe-callback': 'error',
++        'jest/valid-describe': 'error',
+         'jest/valid-expect': 'error',
+         'jest/valid-expect-in-promise': 'error',
+         'jest/valid-title': 'warn',
+@@ -39,23 +36,10 @@ module.exports = {
+         // https://github.com/testing-library/eslint-plugin-testing-library
+         'testing-library/await-async-query': 'error',
+         'testing-library/await-async-utils': 'error',
+-        'testing-library/no-await-sync-query': 'error',
+-        'testing-library/no-container': 'error',
+-        'testing-library/no-debugging-utils': 'error',
++        'testing-library/no-await-sync-query': 'warn',
+         'testing-library/no-dom-import': ['error', 'react'],
+-        'testing-library/no-node-access': 'error',
+-        'testing-library/no-promise-in-fire-event': 'error',
+-        'testing-library/no-render-in-setup': 'error',
+-        'testing-library/no-unnecessary-act': 'error',
+         'testing-library/no-wait-for-empty-callback': 'error',
+-        'testing-library/no-wait-for-multiple-assertions': 'error',
+-        'testing-library/no-wait-for-side-effects': 'error',
+         'testing-library/no-wait-for-snapshot': 'error',
+-        'testing-library/prefer-find-by': 'error',
+-        'testing-library/prefer-presence-queries': 'error',
+-        'testing-library/prefer-query-by-disappearance': 'error',
+-        'testing-library/prefer-screen-queries': 'error',
+-        'testing-library/render-result-naming-convention': 'error',
+       },
+     },
+   ],
