@@ -36,7 +36,7 @@ class Diary(models.Model):
     diary_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(users, on_delete=models.CASCADE, db_column='user_id')
     date = models.DateField()
-    content = models.TextField()
+    content = models.TextField(max_length=300)
     objects = DiaryManager()
     class Meta:
         db_table = 'diary'
