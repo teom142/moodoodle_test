@@ -18,7 +18,8 @@ function App() {
             <Pc className='flex flex-col m-auto'>
               <div className='flex-1'>
                 <Routes>
-                  <Route exact path='/' element={<Start />}>
+                  {/* 시작화면 테스트 시 element에 Start 작성 */}
+                  <Route exact path='/' element={<Home />}>
                     <Route path='/' element={<Main />} />
                     <Route
                       path='/diary/:selectedDate'
