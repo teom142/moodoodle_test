@@ -15,20 +15,12 @@ export default function Start(){
     function goSignUp(){
         movePage("/user/signup");
     }
-    const subdesStyle = "w-[289px] h-[20px] text-[15px] font-semibold text-center text-black"
-
   return (
     <div className="flex justify-center flex-col items-center w-[390px] h-screen bg-gradient-to-br from-yellow-100 via-red-100 to-purple-100">
-    {/* 처음 비로그인 화면에 들어올 경우 헤더가 존재해서는 안됨 */}
         {/* 보조 설명 및 타이틀 Image */}
-        <p className="w-[289px] h-[30px] text-[15px] font-semibold text-center text-black">
-            <span className={subdesStyle}>
-            여러분의 감정을
-            </span>
-            <br />
-            <span className={subdesStyle}>
+        <p className="w-[289px] h-[20px] text-[15px] font-semibold text-center text-black">
+            여러분의 감정을<br/>
             다채로운 색깔로 기록하고 관리하는 다이어리
-            </span>
         </p>
         <div className="">
             <img src="/assets/moodoodleLogoBig.svg" alt="logo" />
