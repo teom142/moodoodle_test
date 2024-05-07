@@ -16,7 +16,7 @@ const COLOR_LIST = {
   FBCFE0: {
     moodId: 3,
     mood_name: '분홍',
-    mood: '# 행복 # 즐거움 # 기쁨  ',
+    mood: '# 행복 # 즐거움 # 기쁨',
     bg: 'bg-[#FBCFE0]',
     text: 'text-[#FBCFE0]',
   },
@@ -44,7 +44,7 @@ const COLOR_LIST = {
   FF9191: {
     moodId: 7,
     mood_name: '',
-    mood: '# 화남 # 짜증 # 분노 # 예민  ',
+    mood: '# 화남 # 짜증 # 분노 # 예민',
     bg: 'bg-[#FF9191]',
     text: 'text-[#FF9191]',
   },
