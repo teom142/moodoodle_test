@@ -19,7 +19,7 @@ class DiaryManager(models.Manager):
         diary.save(using=self._db)
         return diary
 
-    def update_diary(self, user_id=None, date=None, content=None):
+    def update_diary(self, user_id, date, content):
         if not user_id:
             raise ValidationError('로그인이 필요합니다')
         if not date:

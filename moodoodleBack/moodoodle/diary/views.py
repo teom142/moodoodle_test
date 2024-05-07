@@ -1,23 +1,25 @@
 from django.shortcuts import render
 
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView, ListAPIView
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, DestroyAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from . import serializers
 from .models import Diary, Diary_Mood
+from user.models import users
 from .serializers import DiaryCreateSerializer, DiaryUpdateSerializer, DiaryDetailSerializer, serializers, CalendarSerializer
 from calendar import monthrange
 from datetime import date, timedelta
 
 class DiaryCreateView(CreateAPIView):
     serializer_class = DiaryCreateSerializer
+    permission_classes = [IsAuthenticated]
     queryset = Diary.objects.all()
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -34,32 +36,31 @@ class DiaryCreateView(CreateAPIView):
                 'message': "이미 이 날짜에 작성된 일기가 있습니다."
             }, status=status.HTTP_400_BAD_REQUEST)
 
-class DiaryUpdateView(UpdateAPIView, RetrieveAPIView):
+class DiaryUpdateView(RetrieveUpdateAPIView):
     serializer_class = DiaryUpdateSerializer
     queryset = Diary.objects.all()
-    # permission_classes = [IsAuthenticated]
-    def patch(self, request, *args, **kwargs):
+    permission_classes = [IsAuthenticated]
+    def get_object(self):
         diary_id = self.kwargs.get('pk')
-        user_id = request.user.id
-        try:
-            diary = Diary.objects.get(diary_id=diary_id)
-            # 일기 접근 제한
-            # if diary.user_id != user_id:
-            #     return Response({
-            #         'success' : False,
-            #         'status code': status.HTTP_403_FORBIDDEN,
-            #         'message' : "일기 접근 권한이 없습니다."
-            #     }, status=status.HTTP_403_FORBIDDEN)
-        except Diary.DoesNotExist:
+        diary = Diary.objects.get(diary_id=diary_id)
+        if diary is None:
             return Response({
                 'success': False,
                 'status code': status.HTTP_404_NOT_FOUND,
-                'message' : "일기가 존재하지 않습니다."
+                'message': "일기가 존재하지 않습니다."
             }, status=status.HTTP_404_NOT_FOUND)
-        serializer = DiaryUpdateSerializer(diary, data=request.data, partial=True)
+        # if diary.user_id != request.user:
+        #     return Response({
+        #         'success': False,
+        #         'status code': status.HTTP_403_FORBIDDEN,
+        #         'message' : "일기 접근 권한이 없습니다."
+        #     }, status=status.HTTP_403_FORBIDDEN)
+        return diary
+    def partial_update(self, request, *args, **kwargs):
         try:
+            serializer = self.get_serializer(self.get_object(), data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            self.perform_update(serializer)
             return Response({
                 'success' : True,
                 'status code' : status.HTTP_200_OK,
@@ -74,24 +75,21 @@ class DiaryUpdateView(UpdateAPIView, RetrieveAPIView):
             }, status=e.status_code)
 
 class DiaryDeleteView(DestroyAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = Diary.objects.all()
-    def get_object(self, request):
+    def get_object(self):
         diary_id = self.kwargs.get('pk')
         return Diary.objects.get(diary_id=diary_id)
 
     def delete(self, request, *args, **kwargs):
-        diary_id = self.kwargs.get('pk')
-        user_id = request.user.id
         try:
-            diary = Diary.objects.get(diary_id=diary_id)
-            # 일기 접근 제한
-            # if diary.user_id != user_id:
-            #     return Response({
-            #         'success' : False,
-            #         'status code': status.HTTP_403_FORBIDDEN,
-            #         'message' : "일기 접근 권한이 없습니다."
-            #     }, status=status.HTTP_403_FORBIDDEN)
+            diary = self.get_object()
+            if diary.user_id != request.user:
+                return Response({
+                    'success' : False,
+                    'status code': status.HTTP_403_FORBIDDEN,
+                    'message' : "일기 접근 권한이 없습니다."
+                }, status=status.HTTP_403_FORBIDDEN)
             diary.delete()
             return Response({
                 'success' : True,
@@ -99,30 +97,27 @@ class DiaryDeleteView(DestroyAPIView):
                 'message' : "요청에 성공하였습니다."
             }, status=status.HTTP_200_OK)
         except Diary.DoesNotExist:
-            status_code = status.HTTP_404_NOT_FOUND
             return Response({
-                'success' : False,
-                'status code': status_code,
-                'message' : "일기가 존재하지 않습니다."
-            }, status=status_code)
+                'success': False,
+                'status code': status.HTTP_404_NOT_FOUND,
+                'message': "일기가 존재하지 않습니다."
+            }, status=status.HTTP_404_NOT_FOUND)
 
 
 class DiaryDetailView(APIView):
     serializer_class = DiaryDetailSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = Diary_Mood.objects.all()
     def get(self, request, *args, **kwargs):
-        diary_id = self.kwargs.get('pk')
-        user_id = request.user.id
         try:
+            diary_id = self.kwargs.get('pk')
             diary = Diary.objects.get(diary_id=diary_id)
-            # 일기 접근 제한
-            # if diary.user_id != user_id:
-            #     return Response({
-            #         'success' : False,
-            #         'status code': status.HTTP_403_FORBIDDEN,
-            #         'message' : "일기 접근 권한이 없습니다."
-            #     }, status=status.HTTP_403_FORBIDDEN)
+            if diary.user_id != request.user:
+                return Response({
+                    'success' : False,
+                    'status code': status.HTTP_403_FORBIDDEN,
+                    'message' : "일기 접근 권한이 없습니다."
+                }, status=status.HTTP_403_FORBIDDEN)
             serializer = DiaryDetailSerializer(diary)
             response_data = {
                 'success' : True,
@@ -211,7 +206,7 @@ class YearlyCalendarView(ListAPIView):
         current_year = date.today().year
 
         if year > current_year:
-            raise ValueError("접근 불가능한 날짜입니다.")
+            raise ValueError("접근 불가능한 연도입니다.")
         user_id = self.request.user.user_id
         return Diary.objects.filter(date__range=(start_date, end_date), user_id=user_id)
 

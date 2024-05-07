@@ -7,7 +7,6 @@ class DiaryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
         fields = ('diary_id', 'user_id', 'date', 'content')
-        # read_only_fields = ['user_id']
 
     def validate(self, data):
         user_id = data.get('user_id')
@@ -24,7 +23,6 @@ class DiaryUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
         fields = ('diary_id', 'user_id', 'date', 'content')
-        # read_only_fields = ['user_id']
     def validate(self, data):
         user_id = data.get('user_id')
         date = data.get('date')
