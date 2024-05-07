@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import CustomButton from "../components/CustomButton";
 import LoginButton from "../components/LoginButton";
 import Main from "./Main";
 //import SignupInput from "../components/SignupInput";
@@ -17,7 +18,7 @@ export default function SignUp(){
     // 현재 년도 설정하기 위한 변수
     const today = new Date();
     const yearoption = [], monthoption = [], dayoption = [];
-    for(let i = 1920; i < today.getFullYear(); i++){
+    for(let i = 1920; i <= today.getFullYear(); i++){
       yearoption.push(<option value={i}>{i}</option>)
     }
     for(let i = 1; i <= 12; i++){
@@ -74,10 +75,10 @@ export default function SignUp(){
                 style={{ boxShadow: "0px 0px 18.85px 0 rgba(0,0,0,0.05)" }}>
                 {/* 회원정보 입력란 */}
                 <form className="login-form" onSubmit={handleSignup}>
-                    <div className="flex justify-center itmes-center mt-[30px]">
+                    <div className="flex justify-center items-center mt-[30px]">
                       <label className={textStyle} htmlFor="username">아이디</label><br/>
                     </div>
-                    <div className="flex justify-center itmes-center mb-[10px]">
+                    <div className="flex justify-center items-center mb-[10px]">
                       <input className={boxStyle}
                       type="text"
                       id="id"
@@ -89,10 +90,10 @@ export default function SignUp(){
                     <div className="ml-[28px] mb-[15px]">
                       <CustomButton text="중복 확인" color="pink"/>
                     </div>
-                    <div className="flex justify-center itmes-center">
+                    <div className="flex justify-center items-center">
                       <label className={textStyle} htmlFor="password">비밀번호</label>
                     </div>
-                    <div className="flex justify-center itmes-center mb-[10px]">
+                    <div className="flex justify-center items-center mb-[10px]">
                       <input className={boxStyle}
                       type="password"
                       id="password"
@@ -101,10 +102,10 @@ export default function SignUp(){
                       placeholder="8자~20자 영문, 숫자 모두 조합"
                       />
                     </div>
-                    <div className="flex justify-center itmes-center">
+                    <div className="flex justify-center items-center">
                       <label className={textStyle} htmlFor="confirm-password">비밀번호 재입력</label>
                     </div>
-                    <div className="flex justify-center itmes-center mb-[10px]">
+                    <div className="flex justify-center items-center mb-[10px]">
                       <input className={boxStyle}
                       type="password"
                       id="confirm-password"
@@ -113,10 +114,10 @@ export default function SignUp(){
                       placeholder="8자~20자 영문, 숫자 모두 조합"
                       />
                     </div>
-                    <div className="flex justify-center itmes-center">
+                    <div className="flex justify-center items-center">
                       <label className={textStyle} htmlFor="nickname">닉네임</label>
                     </div>
-                    <div className="flex justify-center itmes-center mb-[10px]">
+                    <div className="flex justify-center items-center mb-[10px]">
                       <input className={boxStyle}
                       type="text"
                       id="nickname"
@@ -124,11 +125,11 @@ export default function SignUp(){
                       onChange={(e) => setNickname(e.target.value)}
                       />
                     </div>
-                    <div className="flex justify-center itmes-center">
+                    <div className="flex justify-center items-center">
                       <label className={textStyle} htmlFor="birthdate">생년월일</label>
                     </div>
                       {/* 생년월일 셀렉트 박스 추가 */}
-                    <div className="flex justify-center itmes-center mb-[10px]">
+                    <div className="flex justify-center items-center mb-[10px]">
                       <select className="w-[130px] h-[43px] rounded-[10px] bg-[#f7f7f7] border border-[#ececec]">
                         {yearoption}
                       </select>
@@ -141,7 +142,7 @@ export default function SignUp(){
                     </div>
                     <br/>
                   {/* 회원가입 버튼 */}
-                  <div className="flex justify-center itmes-center mb-[10px]">
+                  <div className="flex justify-center items-center mb-[10px]">
                     <LoginButton text="회원가입" onClick={onclick}/>
                   </div>
                   {/* 로그인 이동 문구 */}
@@ -149,7 +150,7 @@ export default function SignUp(){
                     <p className="text-xs text-left text-[#444]/70 mr-[13px]">
                     이미 계정이 있으신가요?
                     </p>
-                    <Link className="text-[13px] font-bold text-[#81b5ff]" to="/login">로그인</Link>
+                    <Link className="text-[13px] font-bold text-[#81b5ff]" to="/user/login">로그인</Link>
                   </div>
                 </form>
             </div>
