@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
@@ -42,14 +42,8 @@ class DiaryUpdateView(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     def get_object(self):
         diary_id = self.kwargs.get('pk')
-        diary = Diary.objects.get(diary_id=diary_id)
-        if diary is None:
-            return Response({
-                'success': False,
-                'status code': status.HTTP_404_NOT_FOUND,
-                'message': "일기가 존재하지 않습니다."
-            }, status=status.HTTP_404_NOT_FOUND)
-        return diary
+        return get_object_or_404(Diary, diary_id=diary_id)
+
     def update(self, request, *args, **kwargs):
         diary = self.get_object()
         if diary.user_id != self.request.user:
@@ -58,7 +52,6 @@ class DiaryUpdateView(RetrieveUpdateAPIView):
                 'status code': status.HTTP_403_FORBIDDEN,
                 'message': "일기 접근 권한이 없습니다."
             }, status=status.HTTP_403_FORBIDDEN)
-
         user_id = self.request.user
         if Diary.objects.filter(user_id=user_id, date=request.data.get('date')).exclude(diary_id=diary.diary_id).first():
             return Response({
@@ -83,10 +76,9 @@ class DiaryDeleteView(DestroyAPIView):
     queryset = Diary.objects.all()
     def get_object(self):
         diary_id = self.kwargs.get('pk')
-        return Diary.objects.get(diary_id=diary_id)
+        return get_object_or_404(Diary, diary_id=diary_id)
 
     def delete(self, request, *args, **kwargs):
-        try:
             diary = self.get_object()
             if diary.user_id != request.user:
                 return Response({
@@ -100,12 +92,6 @@ class DiaryDeleteView(DestroyAPIView):
                 'status code': status.HTTP_200_OK,
                 'message' : "요청에 성공하였습니다."
             }, status=status.HTTP_200_OK)
-        except Diary.DoesNotExist:
-            return Response({
-                'success': False,
-                'status code': status.HTTP_404_NOT_FOUND,
-                'message': "일기가 존재하지 않습니다."
-            }, status=status.HTTP_404_NOT_FOUND)
 
 
 class DiaryDetailView(APIView):
@@ -115,7 +101,7 @@ class DiaryDetailView(APIView):
     def get(self, request, *args, **kwargs):
         try:
             diary_id = self.kwargs.get('pk')
-            diary = Diary.objects.get(diary_id=diary_id)
+            diary = get_object_or_404(Diary, diary_id=diary_id)
             if diary.user_id != request.user:
                 return Response({
                     'success' : False,
@@ -136,12 +122,6 @@ class DiaryDetailView(APIView):
                 'success' : False,
                 'status code': status.HTTP_404_NOT_FOUND,
                 'message' : "분석된 내용이 없습니다."
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Diary.DoesNotExist:
-            return Response({
-                'success' : False,
-                'status code': status.HTTP_404_NOT_FOUND,
-                'message' : "일기가 존재하지 않습니다."
             }, status=status.HTTP_404_NOT_FOUND)
 
 class MonthlyCalendarView(ListAPIView):
