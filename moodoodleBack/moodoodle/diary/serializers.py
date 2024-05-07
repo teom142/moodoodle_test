@@ -74,7 +74,7 @@ class DiaryDetailSerializer(serializers.ModelSerializer):
         return sorted_data
 
     
-class MonthlyCalendarSerializer(serializers.ModelSerializer):
+class CalendarSerializer(serializers.ModelSerializer):
     main_mood_color = serializers.SerializerMethodField()
 
     class Meta:

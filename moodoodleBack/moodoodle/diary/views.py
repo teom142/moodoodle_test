@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from . import serializers
 from .models import Diary, Diary_Mood
-from .serializers import DiaryCreateSerializer, DiaryUpdateSerializer, DiaryDetailSerializer, serializers, MonthlyCalendarSerializer
+from .serializers import DiaryCreateSerializer, DiaryUpdateSerializer, DiaryDetailSerializer, serializers, CalendarSerializer
 from calendar import monthrange
 from datetime import date, timedelta
 
@@ -146,7 +146,7 @@ class DiaryDetailView(APIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
 class MonthlyCalendarView(ListAPIView):
-    serializer_class = MonthlyCalendarSerializer
+    serializer_class = CalendarSerializer
     # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -188,6 +188,62 @@ class MonthlyCalendarView(ListAPIView):
                     'diary_id': None,
                     'date': current_date.isoformat(),
                     'content': None,
+                    'main_mood_color': None
+                })
+            current_date += timedelta(days=1)
+
+        return Response({
+            'success' : True,
+            'status code': status.HTTP_200_OK,
+            'message': '요청에 성공하였습니다.',
+            'result': results
+        }, status=status.HTTP_200_OK)
+
+class YearlyCalendarView(ListAPIView):
+    serializer_class = CalendarSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+
+        year = int(self.kwargs['year'])
+        start_date = date(year, 1, 1)
+        end_date = date(year, 12, monthrange(year, 12)[1])
+        current_year = date.today().year
+
+        if year > current_year:
+            raise ValueError("접근 불가능한 날짜입니다.")
+        user_id = self.request.user.user_id
+        return Diary.objects.filter(date__range=(start_date, end_date), user_id=user_id)
+
+    def list(self, request, *args, **kwargs):
+        year = int(self.kwargs['year'])
+        start_date = date(year, 1, 1)
+        end_date = date(year, 12, monthrange(year, 12)[1])
+
+        try:
+            queryset = self.get_queryset()
+        except ValueError as e:
+            return Response({
+                'success' : False,
+                'status code': status.HTTP_400_BAD_REQUEST,
+                'message': str(e),
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        results = []
+        current_date = start_date
+        while current_date <= end_date:
+            diary = queryset.filter(date=current_date).first()
+            if diary:
+                serializer = self.serializer_class(diary)
+                results.append({
+                    'diary_id': serializer.data.get('diary_id'),
+                    'date': serializer.data.get('date'),
+                    'main_mood_color': serializer.data.get('main_mood_color')
+                })
+            else:
+                results.append({
+                    'diary_id': None,
+                    'date': current_date.isoformat(),
                     'main_mood_color': None
                 })
             current_date += timedelta(days=1)
