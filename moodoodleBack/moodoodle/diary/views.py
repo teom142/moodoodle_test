@@ -84,7 +84,7 @@ class DiaryDeleteView(DestroyAPIView):
         diary_id = self.kwargs.get('pk')
         user_id = request.user.id
         try:
-            diary = Diary.objects.get(di한ry_id=diary_id)
+            diary = Diary.objects.get(diary_id=diary_id)
             # 일기 접근 제한
             # if diary.user_id != user_id:
             #     return Response({
