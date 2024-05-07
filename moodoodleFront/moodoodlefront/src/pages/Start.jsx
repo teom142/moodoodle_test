@@ -34,13 +34,13 @@ export default function Start(){
             <img src="/assets/moodoodleLogoBig.svg" alt="logo" />
         </div>
         {/* 로그인 및 회원가입 버튼 */}
-        <div className="grid place-items-center">
+        <div className="flex flex-col items-center mt-[-30px]">
             <button onClick={goLogin}><MainButton data="로그인"/></button>
             <button onClick={goSignUp}><MainButton data="회원가입"/></button>
         </div>
         
-        {/* 프로젝트 주최팀의 타 작업물 */}
-        <div className="">
+        {/* 프로젝트 주최팀의 타 작업물 - 지워도 무관*/}
+        <div className="mt-[30px]">
             <p className="text-sm text-black">
                 <span className="text-sm font-medium">
                 우리의 서비스,{" "}

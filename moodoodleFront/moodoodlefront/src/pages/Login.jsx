@@ -9,7 +9,7 @@ export default function Login(){
     const [loginCheck, setLoginCheck] = useState(false); // 로그인 상태 체크
     // 스타일 설정
     const textStyle = "w-[271px] text-[13px] font-semibold text-darkGray"
-    const boxStyle = "w-[283px] h-[43px] pl-[7px] rounded-[10px] bg-[gray-scale-1] border border-darkGray/10 text-[13px]"
+    const boxStyle = "w-[283px] h-[43px] pl-[7px] rounded-[10px] bg-gray-scale-1 border border-darkGray/10 text-[13px]"
 
     const navigate = useNavigate();
   
@@ -47,7 +47,7 @@ export default function Login(){
 
     };
     return(
-        <div className="flex justify-center flex-col items-center w-[390px] h-screen bg-white ">
+        <div className="flex justify-center flex-col items-center w-[390px] h-screen bg-white">
             <div className="">
                 <img src="/assets/moodoodleLogoBig.svg" alt="logo" />
             </div>
@@ -82,7 +82,7 @@ export default function Login(){
                     <br/>
                   </div>
                   {loginCheck && (
-                  <label  style={{color: "red"}}>아이디 혹은 비밀번호가 틀렸습니다.</label>
+                  <label className="text-red">아이디 혹은 비밀번호가 틀렸습니다.</label>
                   )}
                   {/* 로그인 버튼 */}
                   <div className="flex justify-center items-center mb-[10px]">
