@@ -19,7 +19,7 @@ class DiaryCreateView(CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Diary.objects.all()
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer( data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -49,30 +49,34 @@ class DiaryUpdateView(RetrieveUpdateAPIView):
                 'status code': status.HTTP_404_NOT_FOUND,
                 'message': "일기가 존재하지 않습니다."
             }, status=status.HTTP_404_NOT_FOUND)
-        # if diary.user_id != request.user:
-        #     return Response({
-        #         'success': False,
-        #         'status code': status.HTTP_403_FORBIDDEN,
-        #         'message' : "일기 접근 권한이 없습니다."
-        #     }, status=status.HTTP_403_FORBIDDEN)
         return diary
-    def partial_update(self, request, *args, **kwargs):
-        try:
-            serializer = self.get_serializer(self.get_object(), data=request.data, partial=True)
-            serializer.is_valid(raise_exception=True)
-            self.perform_update(serializer)
+    def update(self, request, *args, **kwargs):
+        diary = self.get_object()
+        if diary.user_id != self.request.user:
             return Response({
-                'success' : True,
-                'status code' : status.HTTP_200_OK,
-                'message': "요청에 성공하였습니다.",
-                'data': serializer.data
-            }, status=status.HTTP_200_OK)
-        except serializers.ValidationError as e:
+                'success': False,
+                'status code': status.HTTP_403_FORBIDDEN,
+                'message': "일기 접근 권한이 없습니다."
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        user_id = self.request.user
+        if Diary.objects.filter(user_id=user_id, date=request.data.get('date')).exclude(diary_id=diary.diary_id).first():
             return Response({
-                'success' : False,
-                'status code': e.status_code,
+                'success': False,
+                'status code': status.HTTP_400_BAD_REQUEST,
                 'message': "이미 이 날짜에 작성된 일기가 있습니다."
-            }, status=e.status_code)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(self.get_object(), data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            'success' : True,
+            'status code' : status.HTTP_200_OK,
+            'message': "요청에 성공하였습니다.",
+            'data': serializer.data
+        }, status=status.HTTP_200_OK)
+
 
 class DiaryDeleteView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
