@@ -7,32 +7,25 @@ class DiaryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
         fields = ('diary_id', 'user_id', 'date', 'content')
-        # read_only_fields = ['user_id']
+        read_only_fields = ('diary_id', 'user_id')
 
     def validate(self, data):
-        user_id = data.get('user_id')
+        user_id = self.context['request'].user
         date = data.get('date')
 
         if Diary.objects.filter(user_id=user_id, date=date).exists():
             raise serializers.ValidationError("이미 이 날짜에 작성된 일기가 있습니다.")
         return data
     def create(self, validated_data):
-        diary = Diary.objects.create(**validated_data)
+        user_id = self.context['request'].user
+        diary = Diary.objects.create(**validated_data, user_id=user_id)
         return diary
 
 class DiaryUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
         fields = ('diary_id', 'user_id', 'date', 'content')
-        # read_only_fields = ['user_id']
-    def validate(self, data):
-        user_id = data.get('user_id')
-        date = data.get('date')
-        diary_id = self.instance.diary_id if self.instance else None
-        existing_diary = Diary.objects.filter(user_id=user_id, date=date).exclude(diary_id=diary_id).first()
-        if existing_diary:
-            raise serializers.ValidationError("이미 이 날짜에 작성된 일기가 있습니다.")
-        return data
+        read_only_fields = ('diary_id', 'user_id')
 
 class DiaryMoodSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,7 +67,7 @@ class DiaryDetailSerializer(serializers.ModelSerializer):
         return sorted_data
 
     
-class MonthlyCalendarSerializer(serializers.ModelSerializer):
+class CalendarSerializer(serializers.ModelSerializer):
     main_mood_color = serializers.SerializerMethodField()
 
     class Meta:
