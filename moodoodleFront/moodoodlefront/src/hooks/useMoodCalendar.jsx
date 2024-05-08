@@ -33,6 +33,36 @@ export default function useMoodCalendar() {
       content: '이것이 오늘이다 ......',
       main_mood_color: 'B5D3FF',
     },
+    {
+      diary_id: 6,
+      date: '2024-04-04',
+      content: '이것이 오늘이다 ......',
+      main_mood_color: 'B5D3FF',
+    },
+    {
+      diary_id: 6,
+      date: '2024-04-04',
+      content: '이것이 오늘이다 ......',
+      main_mood_color: 'B5D3FF',
+    },
+    {
+      diary_id: 6,
+      date: '2024-04-04',
+      content: '이것이 오늘이다 ......',
+      main_mood_color: 'B5D3FF',
+    },
+    {
+      diary_id: 6,
+      date: '2024-04-04',
+      content: '이것이 오늘이다 ......',
+      main_mood_color: 'B5D3FF',
+    },
+    {
+      diary_id: 6,
+      date: '2024-04-04',
+      content: '이것이 오늘이다 ......',
+      main_mood_color: 'B5D3FF',
+    },
   ]);
 
   const [moodcolorlist, setMoodcolorlist] = useState([

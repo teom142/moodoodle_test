@@ -3,6 +3,7 @@ import MoodHashTag from './MoodHashTag';
 import useDiaryAnalysis from '../hooks/useDiaryAnalysis';
 import useProfile from '../hooks/useProfile';
 import colorsByCode from '../constants/colorsByCode';
+import useRenderCalenderBoard from './useRenderCalenderBoard';
 
 export default function MoodAnalysis({
   isModal,
@@ -13,7 +14,7 @@ export default function MoodAnalysis({
   const { profile } = useProfile();
 
   useEffect(() => {
-    getDiaryAnalysis();
+    getDiaryAnalysis(diary_id);
   }, []);
 
   return (

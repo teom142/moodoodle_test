@@ -8,6 +8,7 @@ import DiaryShow from '../components/DiaryShow';
 export default function AnalysisPage() {
   const { daysDiary } = useMoodCalendar();
   const selectedDate = useParams();
+
   // 날짜가 안 바뀜 api 연결하고 수정 예정
   return (
     <div className='flex flex-col justify-between items-center gap-[15px]'>
