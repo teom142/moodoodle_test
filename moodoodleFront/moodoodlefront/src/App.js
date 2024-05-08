@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Mobile, Pc } from './responsive';
 import { RecoilRoot } from 'recoil';
+import Start from './pages/Start';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import Home from './pages/Home';
 import Main from './pages/Main';
 import DiaryWritePage from './pages/DiaryWritePage';
 import AnalysisPage from './pages/AnalysisPage';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
-import Start from './pages/Start';
 
 function App() {
   return (
@@ -30,8 +30,9 @@ function App() {
                       element={<AnalysisPage />}
                     />
                   </Route>
-                  <Route path='/user/login' element={<Login/>}/>
-                  <Route path='/user/signup' element={<SignUp/>}/>
+                  <Route path='/start' element={<Start />} />
+                  <Route path='/login' element={<Login />} />
+                  <Route path='/signup' element={<SignUp />} />
                 </Routes>
               </div>
             </Pc>
