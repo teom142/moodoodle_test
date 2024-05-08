@@ -6,7 +6,7 @@ export default function MainButton(props) {
   <p className="w-[85px] absolute left-[7px] top-[6px] text-[15px] font-bold text-center text-black">
     {props.data}
   </p>
-    <img src="/assets/MainButton.svg"/>
+    <img src="/assets/MainButton.svg" alt="button"/>
   </div>
   )
 }
