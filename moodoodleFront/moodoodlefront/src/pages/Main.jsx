@@ -6,6 +6,7 @@ import Calendar from '../components/Calendar';
 import DiaryShow from '../components/DiaryShow';
 import useMoodCalendar from '../hooks/useMoodCalendar';
 import selectedDateState from '../stores/selectedDate';
+import YearCalendar from '../components/YearCalendar';
 
 export default function Main() {
   const context = useOutletContext();
@@ -18,7 +19,7 @@ export default function Main() {
     <div className='relative'>
       <div className='flex flex-col items-center gap-[12px]'>
         {context.isCalendar ? (
-          ''
+          <YearCalendar handleColorChipToggle={context.handleColorChipToggle} />
         ) : (
           <Calendar
             handleColorChipToggle={context.handleColorChipToggle}

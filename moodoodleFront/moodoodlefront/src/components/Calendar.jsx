@@ -60,7 +60,7 @@ export default function Calendar({
         <div className='flex flex-row justify-between items-center w-[283px] h-[18px]'>
           <img
             src='/assets/leftArrow.svg'
-            alt='왼쪽 화살표'
+            alt='leftArrow'
             className='w-[9px] h-[7px]'
             onClick={() => handlePrevMonth(selectedDate)}
           />
@@ -70,7 +70,7 @@ export default function Calendar({
           </p>
           <img
             src='/assets/rightArrow.svg'
-            alt='오른쪽 화살표'
+            alt='rightArrow'
             className='w-[9px] h-[7px]'
             onClick={() => handleNextMonth(selectedDate)}
           />
