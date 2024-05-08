@@ -16,7 +16,7 @@ export default function Start() {
     movePage('/signup');
   }
   return (
-    <div className='flex justify-center flex-col items-center w-[390px] h-screen bg-gradient-to-br from-yellow-100 via-red-100 to-purple-100'>
+    <div className='flex flex-col justify-center items-center w-[390px] h-screen bg-gradient-to-br from-yellow-100 via-red-100 to-purple-100'>
       {/* 보조 설명 및 타이틀 Image */}
       <p className='w-[289px] h-[20px] text-[15px] font-semibold text-center text-black'>
         여러분의 감정을
@@ -26,12 +26,8 @@ export default function Start() {
       <img src='/assets/moodoodleLogoBig.svg' alt='logo' />
       {/* 로그인 및 회원가입 버튼 */}
       <div className='flex flex-col items-center mt-[-30px]'>
-        <button onClick={goLogin}>
-          <MainButton data='로그인' />
-        </button>
-        <button onClick={goSignUp}>
-          <MainButton data='회원가입' />
-        </button>
+        <MainButton text='로그인' onClick={goLogin} />
+        <MainButton text='회원가입' onClick={goSignUp} />
       </div>
 
       {/* 프로젝트 주최팀의 타 작업물 - 지워도 무관*/}

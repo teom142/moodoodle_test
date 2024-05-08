@@ -22,13 +22,13 @@ export default function useMoodCalendar() {
       main_mood_color: null,
     },
     {
-      diary_id: 5,
+      diary_id: 4,
       date: '2024-04-04',
       content: '행복하당 ......',
       main_mood_color: 'FBCFE0',
     },
     {
-      diary_id: 6,
+      diary_id: 5,
       date: '2024-04-04',
       content: '이것이 오늘이다 ......',
       main_mood_color: 'B5D3FF',
@@ -40,28 +40,29 @@ export default function useMoodCalendar() {
       main_mood_color: 'B5D3FF',
     },
     {
-      diary_id: 6,
+      diary_id: 7,
       date: '2024-04-04',
       content: '이것이 오늘이다 ......',
+      main_mood_color: 'B5D3FF',
+    },
+    {
+      diary_id: 8,
+      date: '2024-05-08',
+      content:
+        '어제 밤에 과제 하느라 밤을 샜더니, 아침에 눈을 뜨는 게 너무 힘들었다. 그래도 점심으로 맛있는 부대찌개를 먹어서 기력이 충전됐다. 공강 시간에는 공소 팀플을 진행했다 ...',
       main_mood_color: 'B5D3FF',
     },
     {
       diary_id: 6,
       date: '2024-04-04',
       content: '이것이 오늘이다 ......',
-      main_mood_color: 'B5D3FF',
+      main_mood_color: 'FECFAD',
     },
     {
       diary_id: 6,
       date: '2024-04-04',
       content: '이것이 오늘이다 ......',
-      main_mood_color: 'B5D3FF',
-    },
-    {
-      diary_id: 6,
-      date: '2024-04-04',
-      content: '이것이 오늘이다 ......',
-      main_mood_color: 'B5D3FF',
+      main_mood_color: 'FECFAD',
     },
   ]);
 
@@ -71,6 +72,9 @@ export default function useMoodCalendar() {
     null,
     'FBCFE0',
     'B5D3FF',
+    'FECFAD',
+    'DBD3FB',
+    null,
   ]);
 
   const getMoodColorList = (daysDiary) => {
