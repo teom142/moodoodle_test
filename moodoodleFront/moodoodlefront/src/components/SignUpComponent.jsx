@@ -146,13 +146,22 @@ export default function SignUp() {
             </label>
             {/* 생년월일 셀렉트 박스값의 변경에 따른 onChange 함수 생성 필요 */}
             <div className='flex flex-row justify-between w-[283px] items-center text-[14px]'>
-              <select className='w-[130px] h-[43px] text-darkGray rounded-[10px] bg-gray-scale-1 border border-[#ececec]'>
+              <select
+                className='w-[130px] h-[43px] text-darkGray rounded-[10px] bg-gray-scale-1 border border-[#ececec]'
+                defaultValue='2000'
+              >
                 {yearoption}
               </select>
-              <select className='w-[69px] h-[43px] text-darkGray rounded-[10px] bg-gray-scale-1 border border-[#ececec]'>
+              <select
+                className='w-[69px] h-[43px] text-darkGray rounded-[10px] bg-gray-scale-1 border border-[#ececec]'
+                defaultValue='1'
+              >
                 {monthoption}
               </select>
-              <select className='w-[69px] h-[43px] text-darkGray rounded-[10px] bg-gray-scale-1 border border-[#ececec]'>
+              <select
+                className='w-[69px] h-[43px] text-darkGray rounded-[10px] bg-gray-scale-1 border border-[#ececec]'
+                defaultValue='1'
+              >
                 {dayoption}
               </select>
             </div>
