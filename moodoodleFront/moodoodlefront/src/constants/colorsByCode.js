@@ -43,7 +43,7 @@ const COLOR_LIST = {
   },
   FF9191: {
     moodId: 7,
-    mood_name: '',
+    mood_name: '빨강',
     mood: '# 화남 # 짜증 # 분노 # 예민',
     bg: 'bg-[#FF9191]',
     text: 'text-[#FF9191]',
