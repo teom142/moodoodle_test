@@ -6,8 +6,7 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import FriendSerializer, FriendListSerializer
-from diary.serializers import CalendarSerializer
+from .serializers import FriendSerializer, FriendListSerializer, FriendCalendarSerializer
 from calendar import monthrange
 from datetime import date, timedelta
 
@@ -152,7 +151,7 @@ class FriendDeleteView(DestroyAPIView):
 
 class FriendCalendarView(ListAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = CalendarSerializer
+    serializer_class = FriendCalendarSerializer
 
     def get_queryset(self):
         user_id = self.request.user.user_id
