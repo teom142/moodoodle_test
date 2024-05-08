@@ -5,6 +5,9 @@ import Home from './pages/Home';
 import Main from './pages/Main';
 import DiaryWritePage from './pages/DiaryWritePage';
 import AnalysisPage from './pages/AnalysisPage';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import Start from './pages/Start';
 
 function App() {
   return (
@@ -15,6 +18,7 @@ function App() {
             <Pc className='flex flex-col m-auto'>
               <div className='flex-1'>
                 <Routes>
+                  {/* 시작화면 테스트 시 element에 Start 작성 */}
                   <Route exact path='/' element={<Home />}>
                     <Route path='/' element={<Main />} />
                     <Route
@@ -26,6 +30,8 @@ function App() {
                       element={<AnalysisPage />}
                     />
                   </Route>
+                  <Route path='/user/login' element={<Login/>}/>
+                  <Route path='/user/signup' element={<SignUp/>}/>
                 </Routes>
               </div>
             </Pc>
