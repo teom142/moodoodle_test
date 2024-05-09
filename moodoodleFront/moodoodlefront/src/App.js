@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Main from './pages/Main';
 import DiaryWritePage from './pages/DiaryWritePage';
 import AnalysisPage from './pages/AnalysisPage';
+import Mypage from './pages/Mypage';
 
 function App() {
   return (
@@ -18,8 +19,10 @@ function App() {
             <Pc className='flex flex-col m-auto'>
               <div className='flex-1'>
                 <Routes>
-                  {/* 시작화면 테스트 시 element에 Start 작성 */}
                   <Route exact path='/' element={<Home />}>
+                    <Route path='/start' element={<Start />} />
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/signup' element={<SignUp />} />
                     <Route path='/' element={<Main />} />
                     <Route
                       path='/diary/:selectedDate'
@@ -29,10 +32,8 @@ function App() {
                       path='/analysis/:selectedDate'
                       element={<AnalysisPage />}
                     />
+                    <Route path='/mypage' element={<Mypage />} />
                   </Route>
-                  <Route path='/start' element={<Start />} />
-                  <Route path='/login' element={<Login />} />
-                  <Route path='/signup' element={<SignUp />} />
                 </Routes>
               </div>
             </Pc>
