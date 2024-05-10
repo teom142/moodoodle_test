@@ -191,7 +191,7 @@ class YearlyCalendarView(ListAPIView):
     def list(self, request, *args, **kwargs):
         year = int(self.kwargs['year'])
         start_date = date(year, 1, 1)
-        end_date = date(year, 12, monthrange(year, 12)[1])
+        end_date = date(year, 1, monthrange(year, 12)[1])
 
         try:
             queryset = self.get_queryset()
@@ -203,23 +203,30 @@ class YearlyCalendarView(ListAPIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         results = []
-        current_date = start_date
-        while current_date <= end_date:
-            diary = queryset.filter(date=current_date).first()
-            if diary:
-                serializer = self.serializer_class(diary)
-                results.append({
-                    'diary_id': serializer.data.get('diary_id'),
-                    'date': serializer.data.get('date'),
-                    'main_mood_color': serializer.data.get('main_mood_color')
-                })
-            else:
-                results.append({
-                    'diary_id': None,
-                    'date': current_date.isoformat(),
-                    'main_mood_color': None
-                })
-            current_date += timedelta(days=1)
+
+        for month in range(1, 12):
+            month_days = []
+            _, last_day = monthrange(year, month)
+            for day in range(1, last_day + 1):
+                current_date = date(year, month, day)
+                diary = queryset.filter(date=current_date).first()
+                if diary:
+                    serializer = self.serializer_class(diary)
+                    month_days.append(({
+                        'diary_id': serializer.data.get('diary_id'),
+                        'date': serializer.data.get('date'),
+                        'main_mood_color': serializer.data.get('main_mood_color')
+                    }))
+                else:
+                    month_days.append({
+                        'diary_id': None,
+                        'date': current_date.isoformat(),
+                        'main_mood_color': None
+                    })
+            results.append({
+                'month' : month,
+                'data' : month_days
+            })
 
         return Response({
             'success' : True,
