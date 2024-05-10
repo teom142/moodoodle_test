@@ -8,23 +8,28 @@ import CustomButton from './CustomButton';
 export default function ProfileManagement({ handleProfileComponent }) {
   const { profile } = useProfile();
   const [isPublic, setIsPublic] = useState(profile.public);
+  const [uploadedImg, setUploadedImg] = useState(null);
   const [modifiedProfile, setModifiedProfile] = useState({
     nickname: profile.nickname,
     description: profile.description,
-    profile_image: profile.profile_image,
-    public: profile.public,
   });
 
   const handleSubmit = () => {
     handleProfileComponent();
   };
 
+  const onChangeImg = (e) => {
+    const file = e.target.files[0];
+    const imgUrl = URL.createObjectURL(file);
+    setUploadedImg(imgUrl);
+  };
+
   /*const handleSubmit = async () => {
     const postData = {
       nickname: modifiedProfile.nickname,
       description: modifiedProfile.description,
-      public: modifiedProfile.public,
-      profile_image: modifiedProfile.profile_image,
+      public: isPublic,
+      profile_image: uploadedImg.profile_image,
     };
     try {
       const response = await axios.post('/user/mypage', postData);
@@ -55,9 +60,19 @@ export default function ProfileManagement({ handleProfileComponent }) {
             alt='프로필 사진'
             className='w-[99px] h-[99px] rounded-full'
           />
-          <p className='text-center font-light text-[14px] text-[#408DF9] tracking-[-1.26px]'>
-            사진 수정 및 삭제
-          </p>
+          <label
+            for='file'
+            className='text-center font-light text-[14px] text-[#408DF9] tracking-[-1.26px] cursor-pointer'
+          >
+            <div>사진 수정 및 삭제</div>
+          </label>
+          <input
+            type='file'
+            className='hidden'
+            onChange={onChangeImg}
+            name='file'
+            id='file'
+          />
         </div>
         <div className='flex flex-col w-[280px] h-[133px] justify-between items-center'>
           <InputProfile
