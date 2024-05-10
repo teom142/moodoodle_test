@@ -11,7 +11,7 @@ export default function ProfileCol() {
   return (
     <div className='flex w-[342px] h-[273px] justify-center items-center rounded-[20px] bg-white shadow-componentShadow'>
       <div className='flex flex-col h-[215px] justify-between items-center'>
-        <p className='font-bold text-base text-darkNavyer'>나의 프로필</p>
+        <p className='font-bold text-base text-darkNavy'>나의 프로필</p>
         <img
           src={`${profile.profile_image}`}
           alt='프로필 사진'

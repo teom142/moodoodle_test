@@ -23,10 +23,7 @@ export default function MainProfile({ isCalendar, setIsCalendar }) {
             <div className='font-medium text-xs'>{profile.description}</div>
           </div>
         </div>
-        <ToggleContainer
-          isCalendar={isCalendar}
-          setIsCalendar={setIsCalendar}
-        />
+        <ToggleContainer is={isCalendar} setIs={setIsCalendar} />
       </div>
     </div>
   );
