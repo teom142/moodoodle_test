@@ -51,7 +51,6 @@ export default function Calendar({
 
   useEffect(() => {
     getMoodCalendar(year_month.year, year_month.month);
-    console.log(year_month);
   }, [year_month]);
 
   return (

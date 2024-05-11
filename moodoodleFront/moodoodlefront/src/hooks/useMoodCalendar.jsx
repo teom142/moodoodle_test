@@ -84,6 +84,13 @@ export default function useMoodCalendar() {
     return moodcolorlist;
   };
 
+  const getNullMoodColorList = () => {
+    for (var i = 0; i < 35; i++) {
+      setMoodcolorlist([[...moodcolorlist, null]]);
+    }
+    return moodcolorlist;
+  };
+
   const getMoodCalendar = async (year, month) => {
     try {
       const getMoodCalendarResponse = await axios.get(
@@ -98,7 +105,10 @@ export default function useMoodCalendar() {
       getMoodColorList(daysDiary);
     } catch (error) {
       const { message } = error.response.data;
-      console.log(message);
+      <window className='alert'>{message}</window>;
+      if ((error.response = 401)) {
+        getNullMoodColorList();
+      }
     }
   };
   return { daysDiary, getMoodCalendar, moodcolorlist, setMoodcolorlist };
