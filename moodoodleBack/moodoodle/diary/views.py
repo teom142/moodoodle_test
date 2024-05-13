@@ -25,14 +25,14 @@ class DiaryCreateView(CreateAPIView):
             serializer.save()
             return Response({
                 'success': True,
-                'status code': status.HTTP_201_CREATED,
+                'status_code': status.HTTP_201_CREATED,
                 'message': "요청에 성공하였습니다.",
                 'data' : serializer.data
             }, status=status.HTTP_201_CREATED)
         except serializers.ValidationError as e:
             return Response({
                 'success': False,
-                'status code': status.HTTP_400_BAD_REQUEST,
+                'status_code': status.HTTP_400_BAD_REQUEST,
                 'message': "이미 이 날짜에 작성된 일기가 있습니다."
             }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -49,14 +49,14 @@ class DiaryUpdateView(RetrieveUpdateAPIView):
         if diary.user_id != self.request.user:
             return Response({
                 'success': False,
-                'status code': status.HTTP_403_FORBIDDEN,
+                'status_code': status.HTTP_403_FORBIDDEN,
                 'message': "일기 접근 권한이 없습니다."
             }, status=status.HTTP_403_FORBIDDEN)
         user_id = self.request.user
         if Diary.objects.filter(user_id=user_id, date=request.data.get('date')).exclude(diary_id=diary.diary_id).first():
             return Response({
                 'success': False,
-                'status code': status.HTTP_400_BAD_REQUEST,
+                'status_code': status.HTTP_400_BAD_REQUEST,
                 'message': "이미 이 날짜에 작성된 일기가 있습니다."
             }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -65,7 +65,7 @@ class DiaryUpdateView(RetrieveUpdateAPIView):
         serializer.save()
         return Response({
             'success' : True,
-            'status code' : status.HTTP_200_OK,
+            'status_code' : status.HTTP_200_OK,
             'message': "요청에 성공하였습니다.",
             'data': serializer.data
         }, status=status.HTTP_200_OK)
@@ -83,13 +83,13 @@ class DiaryDeleteView(DestroyAPIView):
             if diary.user_id != request.user:
                 return Response({
                     'success' : False,
-                    'status code': status.HTTP_403_FORBIDDEN,
+                    'status_code': status.HTTP_403_FORBIDDEN,
                     'message' : "일기 접근 권한이 없습니다."
                 }, status=status.HTTP_403_FORBIDDEN)
             diary.delete()
             return Response({
                 'success' : True,
-                'status code': status.HTTP_200_OK,
+                'status_code': status.HTTP_200_OK,
                 'message' : "요청에 성공하였습니다."
             }, status=status.HTTP_200_OK)
 
@@ -104,13 +104,13 @@ class DiaryDetailView(APIView):
         if diary.user_id != request.user:
             return Response({
                 'success' : False,
-                'status code': status.HTTP_403_FORBIDDEN,
+                'status_code': status.HTTP_403_FORBIDDEN,
                 'message' : "일기 접근 권한이 없습니다."
             }, status=status.HTTP_403_FORBIDDEN)
         serializer = DiaryDetailSerializer(diary)
         response_data = {
             'success' : True,
-            'status code': status.HTTP_200_OK,
+            'status_code': status.HTTP_200_OK,
             'message' : "요청에 성공하였습니다.",
             'diary_id' : diary_id,
             'detail' : serializer.data['detail']
@@ -145,7 +145,7 @@ class MonthlyCalendarView(ListAPIView):
         except ValueError as e:
             return Response({            
                 'success' : False,
-                'status code': status.HTTP_400_BAD_REQUEST,
+                'status_code': status.HTTP_400_BAD_REQUEST,
                 'message': str(e),
             }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -167,7 +167,7 @@ class MonthlyCalendarView(ListAPIView):
 
         return Response({
             'success' : True,
-            'status code': status.HTTP_200_OK,
+            'status_code' : status.HTTP_200_OK,
             'message': '요청에 성공하였습니다.',
             'result': results
         }, status=status.HTTP_200_OK)
@@ -195,7 +195,7 @@ class YearlyCalendarView(ListAPIView):
         except ValueError as e:
             return Response({
                 'success' : False,
-                'status code': status.HTTP_400_BAD_REQUEST,
+                'status_code': status.HTTP_400_BAD_REQUEST,
                 'message': str(e),
             }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -227,7 +227,7 @@ class YearlyCalendarView(ListAPIView):
 
         return Response({
             'success' : True,
-            'status code': status.HTTP_200_OK,
+            'status_code': status.HTTP_200_OK,
             'message': '요청에 성공하였습니다.',
             'result': results
         }, status=status.HTTP_200_OK)

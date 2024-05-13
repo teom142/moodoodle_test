@@ -121,7 +121,7 @@ class UserMoodReportView(ListAPIView):
         if date(year, month, 1) > date.today():
             return Response({
                 'success': False,
-                'status code': status.HTTP_400_BAD_REQUEST,
+                'status_code': status.HTTP_400_BAD_REQUEST,
                 'message' : "감정 레포트를 조회할 수 없습니다."
             }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -160,7 +160,7 @@ class UserMoodReportView(ListAPIView):
         ]
         return Response({
             'success' : True,
-            'status code': status.HTTP_200_OK,
+            'status_code': status.HTTP_200_OK,
             'message' : "요청에 성공하였습니다.",
             'detail': detail
         }, status=status.HTTP_200_OK)
