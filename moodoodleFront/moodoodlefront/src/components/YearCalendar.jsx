@@ -21,7 +21,7 @@ export default function YearCalendar({ handleColorChipToggle }) {
 
   return (
     <div className='flex justify-center items-center w-[342px] h-[586px] rounded-[20px] shadow-componentShadow'>
-      <div className='flex flex-col w-[284px] h-[523px] justify-between items-center'>
+      <div className='flex flex-col w-[284px] h-[523px] gap-[12px] items-center'>
         <div className='flex flex-row justify-center items-start w-[287px] h-[38px] border-b border-[#E4E5E7]'>
           <div className='flex flex-row justify-between w-[287px] justify-between items-center'>
             <img

@@ -6,7 +6,7 @@ export default function ProfileCol() {
 
   useEffect(() => {
     getUserProfile();
-  }, [localStorage.getItem('user_id')]);
+  }, [profile]);
 
   return (
     <div className='flex w-[342px] h-[273px] justify-center items-center rounded-[20px] bg-white shadow-componentShadow'>

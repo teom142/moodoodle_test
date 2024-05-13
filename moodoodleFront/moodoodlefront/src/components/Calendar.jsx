@@ -16,7 +16,7 @@ export default function Calendar({
     month: splited[1],
   });
   const [arr, setArr] = useState([null]);
-  const { daysDiary, getMoodCalendar } = useMoodCalendar();
+  const { getMoodCalendar } = useMoodCalendar();
 
   const handleSelectDate = (v) => {
     setSelectedDate(v);
@@ -60,7 +60,7 @@ export default function Calendar({
           <img
             src='/assets/leftArrow.svg'
             alt='leftArrow'
-            className='w-[9px] h-[7px]'
+            className='w-[9px] h-[7px] cursor-pointer'
             onClick={() => handlePrevMonth(selectedDate)}
           />
           <p className='text-[17px] font-semibold text-darkNavy'>
@@ -70,7 +70,7 @@ export default function Calendar({
           <img
             src='/assets/rightArrow.svg'
             alt='rightArrow'
-            className='w-[9px] h-[7px]'
+            className='w-[9px] h-[7px] cursor-pointer'
             onClick={() => handleNextMonth(selectedDate)}
           />
         </div>

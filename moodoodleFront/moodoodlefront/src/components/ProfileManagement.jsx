@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ToggleContainer from './ToggleContainer';
 import InputProfile from './InputProfile';
@@ -14,17 +14,13 @@ export default function ProfileManagement({ handleProfileComponent }) {
     description: profile.description,
   });
 
-  const handleSubmit = () => {
-    handleProfileComponent();
-  };
-
   const onChangeImg = (e) => {
     const file = e.target.files[0];
     const imgUrl = URL.createObjectURL(file);
     setUploadedImg(imgUrl);
   };
 
-  /*const handleSubmit = async () => {
+  const handleSubmit = async () => {
     const postData = {
       nickname: modifiedProfile.nickname,
       description: modifiedProfile.description,
@@ -34,12 +30,11 @@ export default function ProfileManagement({ handleProfileComponent }) {
     try {
       const response = await axios.post('/user/mypage', postData);
       console.log(response.data);
-
       handleProfileComponent();
     } catch (error) {
       console.error('Error submitting post:', error);
     }
-  };*/
+  };
 
   return (
     <div className='flex w-[342px] h-[479px] justify-center items-center rounded-[20px] bg-white shadow-componentShadow'>
