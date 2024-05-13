@@ -4,6 +4,7 @@ import useMonthlyReport from '../hooks/useMonthlyReport';
 import useProfile from '../hooks/useProfile';
 import colorsByCode from '../constants/colorsByCode';
 import MoodHashTag from './MoodHashTag';
+import MoodPieChart from './MoodPieChart';
 
 export default function MonthlyReport({
   handleReportComponent,
@@ -75,7 +76,7 @@ export default function MonthlyReport({
           />
         </div>
         <div className='flex w-[342px] h-[350px] justify-center items-center'>
-          차트
+          <MoodPieChart data={monthlyReport.mood_color_list} />
         </div>
         <div className='flex flex-col w-[310px] h-[45px]'>
           <div className='flex flex-row justify-between items-center'>
@@ -87,21 +88,18 @@ export default function MonthlyReport({
             <br />
             <span
               className={
-                colorsByCode.COLOR_LIST[
-                  monthlyReport.mood_color_list[0].mood_color
-                ].text
+                colorsByCode.COLOR_LIST[monthlyReport.mood_color_list[0].id]
+                  .text
               }
             >
               [
               {
-                colorsByCode.COLOR_LIST[
-                  monthlyReport.mood_color_list[0].mood_color
-                ].mood_name
+                colorsByCode.COLOR_LIST[monthlyReport.mood_color_list[0].id]
+                  .mood_name
               }
               ]
             </span>
-            이 {monthlyReport.mood_color_list[0].total_ratio}%를 차지하고
-            있어요~
+            이 {monthlyReport.mood_color_list[0].value}%를 차지하고 있어요~
           </div>
         </div>
         <div className='flex flex-col w-[268px] h-[99px] justify-between items-center'>

@@ -1,33 +1,40 @@
 import { useState } from 'react';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import colorsByCode from '../constants/colorsByCode';
 
 export default function useMonthlyReport() {
   const [date, setDate] = useState({
     year: dayjs().format('YYYY'),
     month: dayjs().format('MM'),
   });
+  const colorlist = colorsByCode.COLOR_LIST;
   const [monthlyReport, setMonthlyReport] = useState({
     mood_color_list: [
       {
-        mood_color: 'FBCFE0',
-        total_ratio: 100,
+        id: 'FBCFE0',
+        color: '#FBCFE0',
+        value: 100,
       },
       {
-        mood_color: 'FEF4A0',
-        total_ratio: 56,
+        id: 'FEF4A0',
+        value: 56,
+        color: '#FEF4A0',
       },
       {
-        mood_color: 'B5D3FF',
-        total_ratio: 20,
+        id: 'B5D3FF',
+        color: '#B5D3FF',
+        value: 20,
       },
       {
-        mood_color: 'FF9191',
-        total_ratio: 14,
+        id: 'FF9191',
+        color: '#FF9191',
+        value: 14,
       },
       {
-        mood_color: 'DBD3FB',
-        total_ratio: 10,
+        id: 'DBD3FB',
+        color: '#DBD3FB',
+        value: 10,
       },
     ],
   });
@@ -79,5 +86,11 @@ export default function useMonthlyReport() {
     }
   };
 
-  return { monthlyReport, monthTagList, date, setDate, getMonthlyReport };
+  return {
+    monthlyReport,
+    monthTagList,
+    date,
+    setDate,
+    getMonthlyReport,
+  };
 }
