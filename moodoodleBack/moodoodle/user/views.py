@@ -129,8 +129,10 @@ class UserMoodReportView(ListAPIView):
         end_date = date(year, month, monthrange(year, month)[1])
         user_id = request.user
         diary_list = Diary.objects.filter(user_id=user_id, date__range=[start_date, end_date])
+
         color_totals = {}
         tag_totals = {}
+
         for diary in diary_list:
             mood_list = Diary_Mood.objects.filter(diary_id=diary.diary_id)
             for mood in mood_list:
@@ -140,18 +142,18 @@ class UserMoodReportView(ListAPIView):
                 if mood.title not in tag_totals:
                     tag_totals[mood.title] = 0
                 tag_totals[mood.title] += mood.ratio
+
         mood_color_list = []
         for color, ratio in color_totals.items():
             mood_color_list.append({'mood_color' : color, 'total_ratio' : ratio})
         sorted_mood_color_list = sorted(mood_color_list, key = lambda x: x['total_ratio'], reverse = True)
-        month_tag_list = []
 
+        month_tag_list = []
         for title, ratio in tag_totals.items():
             color = Diary_Mood.objects.filter(title = title).first().color
             month_tag_list.append({'tag_title': title, 'tag_color' : color, 'tag_ratio': ratio})
 
-        sorted_month_tag_list = sorted(month_tag_list, key = lambda x: x['tag_ratio'], reverse = True)
-        sorted_month_tag_list = sorted_month_tag_list[0:5]
+        sorted_month_tag_list = sorted(month_tag_list, key = lambda x: x['tag_ratio'], reverse = True)[:5]
         detail = [
             {'mood_color_list' : sorted_mood_color_list},
             {'month_tag_list' : sorted_month_tag_list}
