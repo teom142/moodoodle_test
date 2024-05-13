@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import MainProfile from '../components/MainProfile';
 import MoodColor from '../components/MoodColor';
 import MoodAnalysisModal from '../components/MoodAnalysisModal';
+import NavigationBar from '../components/NavigationBar';
 
 export default function Home() {
   const [isCalendar, setIsCalendar] = useState(false);
@@ -45,6 +46,7 @@ export default function Home() {
             handleDayMoodAnalysisToggle,
           }}
         />
+        <NavigationBar />
       </div>
     </>
   );

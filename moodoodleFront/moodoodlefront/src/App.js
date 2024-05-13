@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Mobile, Pc } from './responsive';
 import { RecoilRoot } from 'recoil';
+import Start from './pages/Start';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import Home from './pages/Home';
 import Main from './pages/Main';
 import DiaryWritePage from './pages/DiaryWritePage';
@@ -15,6 +18,7 @@ function App() {
             <Pc className='flex flex-col m-auto'>
               <div className='flex-1'>
                 <Routes>
+                  {/* 시작화면 테스트 시 element에 Start 작성 */}
                   <Route exact path='/' element={<Home />}>
                     <Route path='/' element={<Main />} />
                     <Route
@@ -26,6 +30,9 @@ function App() {
                       element={<AnalysisPage />}
                     />
                   </Route>
+                  <Route path='/start' element={<Start />} />
+                  <Route path='/login' element={<Login />} />
+                  <Route path='/signup' element={<SignUp />} />
                 </Routes>
               </div>
             </Pc>
