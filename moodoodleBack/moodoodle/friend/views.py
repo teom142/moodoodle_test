@@ -26,7 +26,7 @@ class FriendListView(ListAPIView):
         serializer = self.serializer_class(queryset, many=True)
         response = {
             'success' : True,
-            'status code': status.HTTP_200_OK,
+            'status_code': status.HTTP_200_OK,
             'message': '요청에 성공하였습니다.',
             'result': serializer.data
         }
@@ -53,7 +53,7 @@ class FriendSearchView(RetrieveAPIView):
         except users.DoesNotExist:
             response = {
                 'success' : False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message': '유저를 찾을 수 없습니다.',
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
@@ -71,7 +71,7 @@ class FriendAddView(CreateAPIView):
         except users.DoesNotExist:
             response = {
                 'success' : False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message': '유저를 찾을 수 없습니다.',
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
@@ -99,7 +99,7 @@ class FriendDeleteView(DestroyAPIView):
         except Friend.DoesNotExist:
             response = {
                 'success' : False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message': '유저를 찾을 수 없습니다.',
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)

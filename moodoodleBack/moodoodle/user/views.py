@@ -24,7 +24,7 @@ class UserRegistrationView(CreateAPIView):
         status_code = status.HTTP_201_CREATED
         response = {
             'success': "true",
-            'status code': status_code,
+            'status_code': status_code,
             'message': "요청에 성공하셨습니다.",
         }
         return Response(response, status=status_code)
@@ -43,7 +43,7 @@ class UserLoginView(CreateAPIView):
                 login(request, user)
                 response = {
                     'success' : 'true',
-                    'status code' : status.HTTP_200_OK,
+                    'status_code' : status.HTTP_200_OK,
                     'message' : "요청에 성공하였습니다.",
                     'data' : serializer.data
                 }
@@ -51,7 +51,7 @@ class UserLoginView(CreateAPIView):
             else:
                 return Response({
                 'success' : False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message' : "로그인에 실패하였습니다."
             }, status=status.HTTP_404_NOT_FOUND)
 
@@ -69,7 +69,7 @@ class MypageAPIView(UpdateAPIView):
             serializer = MypageSerializer(user)
             response_data = {
                 'success' : True,
-                'status code': status.HTTP_200_OK,
+                'status_code': status.HTTP_200_OK,
                 'message' : "요청에 성공하였습니다.",
                 'id' : id,
                 'data' : serializer.data
@@ -78,7 +78,7 @@ class MypageAPIView(UpdateAPIView):
         except users.DoesNotExist:
             return Response({
                 'success' : False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message' : "해당 유저가 없습니다."
             }, status=status.HTTP_404_NOT_FOUND)
     
@@ -90,7 +90,7 @@ class MypageAPIView(UpdateAPIView):
         except users.DoesNotExist:
             return Response({
                 'success': False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message' : "유저가 존재하지 않습니다."
             }, status=status.HTTP_404_NOT_FOUND)
         serializer = self.serializer_class(
@@ -101,14 +101,14 @@ class MypageAPIView(UpdateAPIView):
             serializer.save()
             return Response({
                 'success' : True,
-                'status code': status.HTTP_200_OK,
+                'status_code': status.HTTP_200_OK,
                 'message': "요청에 성공하였습니다.",
                 'data': serializer.data
             }, status=status.HTTP_200_OK)
         except serializers.ValidationError as e:
             return Response({
                 'success' : False,
-                'status code': status.HTTP_400_BAD_REQUEST,
+                'status_code': status.HTTP_400_BAD_REQUEST,
                 'message': e.detail
             }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -181,6 +181,6 @@ class UserLogoutView(RetrieveAPIView):
         logout(request)
         return Response({
                 'success' : True,
-                'status code': status.HTTP_200_OK,
+                'status_code': status.HTTP_200_OK,
                 'message': "로그아웃에 성공하였습니다."
             }, status=status.HTTP_200_OK)
