@@ -120,7 +120,7 @@ class DiaryDetailView(APIView):
 
 class MonthlyCalendarView(ListAPIView):
     serializer_class = CalendarSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         year = int(self.kwargs['year'])
