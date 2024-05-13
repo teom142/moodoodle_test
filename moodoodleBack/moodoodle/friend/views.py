@@ -65,7 +65,7 @@ class FriendSearchView(RetrieveAPIView):
         except users.DoesNotExist:
             response = {
                 'success' : False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message': '유저를 찾을 수 없습니다.',
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)
@@ -135,7 +135,7 @@ class FriendDeleteView(DestroyAPIView):
         except Friend.DoesNotExist:
             response = {
                 'success' : False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message': '유저를 찾을 수 없습니다.',
             }
             return Response(response, status=status.HTTP_404_NOT_FOUND)

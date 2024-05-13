@@ -1,12 +1,16 @@
 # views.py
+from calendar import monthrange
+from datetime import date
+
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from . import serializers
 from .models import users
+from diary.models import Diary, Diary_Mood
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, MypageSerializer, UserLogoutSerializer
 
 class UserRegistrationView(CreateAPIView):
@@ -20,7 +24,7 @@ class UserRegistrationView(CreateAPIView):
         status_code = status.HTTP_201_CREATED
         response = {
             'success': "true",
-            'status code': status_code,
+            'status_code': status_code,
             'message': "요청에 성공하셨습니다.",
         }
         return Response(response, status=status_code)
@@ -39,7 +43,7 @@ class UserLoginView(CreateAPIView):
                 login(request, user)
                 response = {
                     'success' : 'true',
-                    'status code' : status.HTTP_200_OK,
+                    'status_code' : status.HTTP_200_OK,
                     'message' : "요청에 성공하였습니다.",
                     'data' : serializer.data
                 }
@@ -47,7 +51,7 @@ class UserLoginView(CreateAPIView):
             else:
                 return Response({
                 'success' : False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message' : "로그인에 실패하였습니다."
             }, status=status.HTTP_404_NOT_FOUND)
 
@@ -65,7 +69,7 @@ class MypageAPIView(UpdateAPIView):
             serializer = MypageSerializer(user)
             response_data = {
                 'success' : True,
-                'status code': status.HTTP_200_OK,
+                'status_code': status.HTTP_200_OK,
                 'message' : "요청에 성공하였습니다.",
                 'id' : id,
                 'data' : serializer.data
@@ -74,7 +78,7 @@ class MypageAPIView(UpdateAPIView):
         except users.DoesNotExist:
             return Response({
                 'success' : False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message' : "해당 유저가 없습니다."
             }, status=status.HTTP_404_NOT_FOUND)
     
@@ -86,7 +90,7 @@ class MypageAPIView(UpdateAPIView):
         except users.DoesNotExist:
             return Response({
                 'success': False,
-                'status code': status.HTTP_404_NOT_FOUND,
+                'status_code': status.HTTP_404_NOT_FOUND,
                 'message' : "유저가 존재하지 않습니다."
             }, status=status.HTTP_404_NOT_FOUND)
         serializer = self.serializer_class(
@@ -97,17 +101,71 @@ class MypageAPIView(UpdateAPIView):
             serializer.save()
             return Response({
                 'success' : True,
-                'status code': status.HTTP_200_OK,
+                'status_code': status.HTTP_200_OK,
                 'message': "요청에 성공하였습니다.",
                 'data': serializer.data
             }, status=status.HTTP_200_OK)
         except serializers.ValidationError as e:
             return Response({
                 'success' : False,
-                'status code': status.HTTP_400_BAD_REQUEST,
+                'status_code': status.HTTP_400_BAD_REQUEST,
                 'message': e.detail
             }, status=status.HTTP_400_BAD_REQUEST)
-        
+
+class UserMoodReportView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Diary_Mood.objects.all()
+    def get(self, request, year, month):
+        year = self.kwargs.get('year')
+        month = self.kwargs.get('month')
+        if date(year, month, 1) > date.today():
+            return Response({
+                'success': False,
+                'status_code': status.HTTP_400_BAD_REQUEST,
+                'message' : "감정 레포트를 조회할 수 없습니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        start_date = date(year, month, 1)
+        end_date = date(year, month, monthrange(year, month)[1])
+        user_id = request.user
+        diary_list = Diary.objects.filter(user_id=user_id, date__range=[start_date, end_date])
+
+        color_totals = {}
+        tag_totals = {}
+
+        for diary in diary_list:
+            mood_list = Diary_Mood.objects.filter(diary_id=diary.diary_id)
+            for mood in mood_list:
+                if mood.color not in color_totals:
+                    color_totals[mood.color] = 0
+                color_totals[mood.color] += mood.ratio
+                if mood.title not in tag_totals:
+                    tag_totals[mood.title] = 0
+                tag_totals[mood.title] += mood.ratio
+
+        mood_color_list = []
+        for color, ratio in color_totals.items():
+            mood_color_list.append({'mood_color' : color, 'total_ratio' : ratio})
+        sorted_mood_color_list = sorted(mood_color_list, key = lambda x: x['total_ratio'], reverse = True)
+
+        month_tag_list = []
+        for title, ratio in tag_totals.items():
+            color = Diary_Mood.objects.filter(title = title).first().color
+            month_tag_list.append({'tag_title': title, 'tag_color' : color, 'tag_ratio': ratio})
+
+        sorted_month_tag_list = sorted(month_tag_list, key = lambda x: x['tag_ratio'], reverse = True)[:5]
+        detail = [
+            {'mood_color_list' : sorted_mood_color_list},
+            {'month_tag_list' : sorted_month_tag_list}
+        ]
+        return Response({
+            'success' : True,
+            'status_code': status.HTTP_200_OK,
+            'message' : "요청에 성공하였습니다.",
+            'detail': detail
+        }, status=status.HTTP_200_OK)
+
+
 class UserLogoutView(RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = users.objects.all()
@@ -123,6 +181,6 @@ class UserLogoutView(RetrieveAPIView):
         logout(request)
         return Response({
                 'success' : True,
-                'status code': status.HTTP_200_OK,
+                'status_code': status.HTTP_200_OK,
                 'message': "로그아웃에 성공하였습니다."
             }, status=status.HTTP_200_OK)
