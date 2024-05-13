@@ -19,7 +19,7 @@ class DiaryCreateView(CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Diary.objects.all()
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer( data=request.data)
+        serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
             serializer.save()
@@ -190,9 +190,6 @@ class YearlyCalendarView(ListAPIView):
 
     def list(self, request, *args, **kwargs):
         year = int(self.kwargs['year'])
-        start_date = date(year, 1, 1)
-        end_date = date(year, 1, monthrange(year, 12)[1])
-
         try:
             queryset = self.get_queryset()
         except ValueError as e:
