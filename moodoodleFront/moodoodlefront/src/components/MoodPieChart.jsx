@@ -6,7 +6,7 @@ export default function MoodPieChart({ data }) {
     <ResponsivePie
       data={data}
       colors={({ data }) => data[`color`]}
-      margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
+      margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
       innerRadius={0.0}
       padAngle={0.7}
       cornerRadius={3}

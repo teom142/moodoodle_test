@@ -7,6 +7,7 @@ import ProfileManagement from '../components/ProfileManagement';
 import MonthlyReport from '../components/MonthlyReport';
 
 export default function Mypage() {
+  const [isClick, setIsClick] = useState(false);
   const [isClickedReport, setIsClickedReport] = useState(false);
   const [isClickedProfile, setIsClickedProfile] = useState(false);
   const [selectedDate, setSelectedDate] = useRecoilState(selectedDateState);
@@ -19,6 +20,10 @@ export default function Mypage() {
     setIsClickedProfile((prev) => !prev);
   }
 
+  function handleColorChipToggle() {
+    setIsClick((prev) => !prev);
+  }
+
   return (
     <div>
       <div className='flex flex-col justify-center items-center gap-[12px]'>
@@ -26,9 +31,11 @@ export default function Mypage() {
           <ProfileManagement handleProfileComponent={handleProfileComponent} />
         ) : isClickedReport ? (
           <MonthlyReport
+            isClick={isClick}
             handleReportComponent={handleReportComponent}
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
+            handleColorChipToggle={handleColorChipToggle}
           />
         ) : (
           <>
