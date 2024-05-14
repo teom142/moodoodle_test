@@ -5,12 +5,6 @@ from django.core.exceptions import ValidationError
 # Create your models here.
 class DiaryManager(models.Manager):
     def post_diary(self, user_id, date, content):
-        if not user_id:
-            raise ValidationError('로그인이 필요합니다.')
-        if not date:
-            raise ValidationError('날짜가 비었습니다.')
-        if not content:
-            raise ValidationError('일기 내용이 비었습니다.')
         diary = self.model(
             user_id=user_id,
             date=date,
@@ -20,13 +14,6 @@ class DiaryManager(models.Manager):
         return diary
 
     def update_diary(self, user_id, date, content):
-        if not user_id:
-            raise ValidationError('로그인이 필요합니다')
-        if not date:
-            raise ValidationError('날짜가 비었습니다.')
-        if not content:
-            raise ValidationError('일기 내용이 비었습니다.')
-
         self.save(user_id, date=date, content=content)
 
     def delete_diary(self):
@@ -43,8 +30,6 @@ class Diary(models.Model):
 
 class DiaryMoodManager(models.Manager):
     def get_mood(self, user_id, diary_id):
-        if not user_id:
-            raise ValidationError('로그인이 필요합니다')
         if not diary_id:
             raise ValidationError('일기가 존재하지 않습니다')
         diary_mood_list = self.filter(diary_id=diary_id)
