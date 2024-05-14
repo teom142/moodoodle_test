@@ -19,22 +19,25 @@ class DiaryCreateView(CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Diary.objects.all()
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response({
-                'success': True,
-                'status_code': status.HTTP_201_CREATED,
-                'message': "요청에 성공하였습니다.",
-                'data' : serializer.data
-            }, status=status.HTTP_201_CREATED)
-        except serializers.ValidationError as e:
+        user_id = request.user
+        date = request.data.get('date')
+        if Diary.objects.filter(user_id=user_id, date=date).first():
             return Response({
                 'success': False,
                 'status_code': status.HTTP_400_BAD_REQUEST,
                 'message': "이미 이 날짜에 작성된 일기가 있습니다."
             }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            'success' : True,
+            'status_code' : status.HTTP_200_OK,
+            'message': "요청에 성공하였습니다.",
+            'data': serializer.data
+        }, status=status.HTTP_200_OK)
+
 
 class DiaryUpdateView(RetrieveUpdateAPIView):
     serializer_class = DiaryUpdateSerializer
