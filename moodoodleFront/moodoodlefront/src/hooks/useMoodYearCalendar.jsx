@@ -4,86 +4,580 @@ import axios from 'axios';
 export default function useMoodYearCalendar() {
   const [monthlyDiary, setMonthlyDiary] = useState([
     {
-      diary_id: 1,
-      date: '2024-04-01',
-      content: '오늘 너무 힘들었다. 운영체제 수업은 너무 어렵고 ....',
-      main_mood_color: 'B5D3FF',
+      month: 1,
+      data: [
+        {
+          diary_id: 3,
+          date: '2024-01-01',
+          main_mood_color: 'FBCFE0',
+        },
+        {
+          diary_id: null,
+          date: '2024-01-02',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-03',
+          main_mood_color: null,
+        },
+        {
+          diary_id: 5,
+          date: '2024-01-04',
+          main_mood_color: 'FEF4A0',
+        },
+        {
+          diary_id: 39,
+          date: '2024-01-05',
+          main_mood_color: 'FBCFE0',
+        },
+        {
+          diary_id: null,
+          date: '2024-01-06',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-07',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-08',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-09',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-10',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-11',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-12',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-13',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-14',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-15',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-16',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-17',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-18',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-19',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-20',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-21',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-22',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-23',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-24',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-25',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-26',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-27',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-28',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-29',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-30',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-01-31',
+          main_mood_color: null,
+        },
+      ],
     },
     {
-      diary_id: 2,
-      date: '2024-04-02',
-      content: '오늘은 드디어 감기가 다 나았다. 너무 기뻤다. ......',
-      main_mood_color: 'FBCFE0',
+      month: 2,
+      data: [
+        {
+          diary_id: 40,
+          date: '2024-02-01',
+          main_mood_color: 'FBCFE0',
+        },
+        {
+          diary_id: 45,
+          date: '2024-02-02',
+          main_mood_color: 'FEF4A0',
+        },
+        {
+          diary_id: 56,
+          date: '2024-02-03',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-02-04',
+          main_mood_color: null,
+        },
+        {
+          diary_id: 128,
+          date: '2024-02-29',
+          main_mood_color: 'FBCFE0',
+        },
+      ],
     },
     {
-      diary_id: null,
-      date: '2024-04-03',
-      content: null,
-      main_mood_color: null,
-    },
-    {
-      diary_id: 4,
-      date: '2024-04-04',
-      content: '행복하당 ......',
-      main_mood_color: 'FBCFE0',
-    },
-    {
-      diary_id: 5,
-      date: '2024-04-04',
-      content: '이것이 오늘이다 ......',
-      main_mood_color: 'B5D3FF',
-    },
-    {
-      diary_id: 6,
-      date: '2024-04-04',
-      content: '이것이 오늘이다 ......',
-      main_mood_color: 'B5D3FF',
-    },
-    {
-      diary_id: 7,
-      date: '2024-04-04',
-      content: '이것이 오늘이다 ......',
-      main_mood_color: 'B5D3FF',
-    },
-    {
-      diary_id: 8,
-      date: '2024-05-08',
-      content:
-        '어제 밤에 과제 하느라 밤을 샜더니, 아침에 눈을 뜨는 게 너무 힘들었다. 그래도 점심으로 맛있는 부대찌개를 먹어서 기력이 충전됐다. 공강 시간에는 공소 팀플을 진행했다 ...',
-      main_mood_color: 'B5D3FF',
-    },
-    {
-      diary_id: 6,
-      date: '2024-04-04',
-      content: '이것이 오늘이다 ......',
-      main_mood_color: 'FECFAD',
-    },
-    {
-      diary_id: 6,
-      date: '2024-04-04',
-      content: '이것이 오늘이다 ......',
-      main_mood_color: 'FECFAD',
+      month: 12,
+      data: [
+        {
+          diary_id: null,
+          date: '2024-12-01',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-12-02',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-12-03',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-12-04',
+          main_mood_color: null,
+        },
+        {
+          diary_id: null,
+          date: '2024-12-31',
+          main_mood_color: null,
+        },
+      ],
     },
   ]);
 
-  const [monthlyList, setMonthlyList] = useState({
-    1: [null],
-    2: [null],
-    3: [null],
-    4: [null],
-    5: [null],
-    6: [null],
-    7: [null],
-    8: [null],
-    9: [null],
-    10: [null],
-    11: [null],
-    12: [null],
-  });
+  const [monthlyList, setMonthlyList] = useState([
+    [
+      {
+        diary_id: 3,
+        date: '2024-01-01',
+        main_mood_color: 'FBCFE0',
+      },
+      {
+        diary_id: null,
+        date: '2024-01-02',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-03',
+        main_mood_color: null,
+      },
+      {
+        diary_id: 5,
+        date: '2024-01-04',
+        main_mood_color: 'FEF4A0',
+      },
+      {
+        diary_id: 39,
+        date: '2024-01-05',
+        main_mood_color: 'FBCFE0',
+      },
+      {
+        diary_id: null,
+        date: '2024-01-06',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-07',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-08',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-09',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-10',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-11',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-12',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-13',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-14',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-15',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-16',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-17',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-18',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-19',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-20',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-21',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-22',
+        main_mood_color: 'B5D3FF',
+      },
+      {
+        diary_id: null,
+        date: '2024-01-23',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-24',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-25',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-26',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-27',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-28',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-29',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-30',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-01-31',
+        main_mood_color: null,
+      },
+    ],
+    [
+      {
+        diary_id: 40,
+        date: '2024-02-01',
+        main_mood_color: 'FBCFE0',
+      },
+      {
+        diary_id: 45,
+        date: '2024-02-02',
+        main_mood_color: 'FEF4A0',
+      },
+      {
+        diary_id: null,
+        date: '2024-02-03',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-04',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-05',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-06',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-07',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-08',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-09',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-10',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-11',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-12',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-13',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-14',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-15',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-16',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-17',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-18',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-19',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-20',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-02-21',
+        main_mood_color: null,
+      },
+      {
+        diary_id: 123,
+        date: '2024-02-22',
+        main_mood_color: 'FBCFE0',
+      },
+      {
+        diary_id: 124,
+        date: '2024-02-23',
+        main_mood_color: 'FBCFE0',
+      },
+      {
+        diary_id: 125,
+        date: '2024-02-24',
+        main_mood_color: 'FBCFE0',
+      },
+      {
+        diary_id: 126,
+        date: '2024-02-25',
+        main_mood_color: 'FBCFE0',
+      },
+      {
+        diary_id: 127,
+        date: '2024-02-26',
+        main_mood_color: 'FBCFE0',
+      },
+      {
+        diary_id: 130,
+        date: '2024-02-27',
+        main_mood_color: 'FBCFE0',
+      },
+      {
+        diary_id: 129,
+        date: '2024-02-28',
+        main_mood_color: 'FBCFE0',
+      },
+      {
+        diary_id: 131,
+        date: '2024-02-29',
+        main_mood_color: 'FBCFE0',
+      },
+    ],
+    [null],
+    [null],
+    [null],
+    [null],
+    [null],
+    [null],
+    [null],
+    [null],
+    [null],
+    [
+      {
+        diary_id: null,
+        date: '2024-12-01',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-12-02',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-12-03',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-12-04',
+        main_mood_color: null,
+      },
+      {
+        diary_id: null,
+        date: '2024-12-31',
+        main_mood_color: null,
+      },
+    ],
+  ]);
 
-  const getMoodColorList = (monthlyDiary) => {
-    for (var i = 0; i < monthlyDiary.length; i++) {
-      setMonthlyList([[...monthlyList[i], monthlyDiary.month[i]]]);
+  const getMonthlyList = (monthlyDiary) => {
+    for (var i = 0; i < 12; i++) {
+      setMonthlyList([...monthlyList, [monthlyDiary[i].data]]);
+    }
+    return monthlyList;
+  };
+
+  const getNullMoodColorList = (monthlyDiary) => {
+    for (var i = 0; i < 12; i++) {
+      setMonthlyList([[...monthlyList, null]]);
     }
     return monthlyList;
   };
@@ -98,15 +592,17 @@ export default function useMoodYearCalendar() {
         },
       );
       setMonthlyDiary(getMoodYearCalendarResponse.result);
-      getMoodColorList(monthlyDiary);
+      getMonthlyList(monthlyDiary);
     } catch (error) {
       const { message } = error.response.data;
-      console.log(message);
+      <window className='alert'>{message}</window>;
+      if ((error.response = 401)) {
+        getNullMoodColorList(monthlyDiary);
+      }
     }
   };
+
   return {
-    monthlyDiary,
-    setMonthlyDiary,
     monthlyList,
     getMoodYearCalendar,
   };

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import ColorNameCode from './ColorNameCode';
-import useRenderYearCalendar from './useRenderYearCalendar';
+import useMoodYearCalendar from '../hooks/useMoodYearCalendar';
+import RenderYearCalendar from './RenderYearCalendar';
 
 const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
 
 export default function YearCalendar({ handleColorChipToggle }) {
   const [year, setYear] = useState(dayjs().format('YYYY'));
+  const { monthlyList, getMoodYearCalendar } = useMoodYearCalendar();
 
   const handlePrevYear = () => {
     const newYear = dayjs(year).subtract(1, 'year').format('YYYY');
@@ -17,7 +19,10 @@ export default function YearCalendar({ handleColorChipToggle }) {
     const newYear = dayjs(year).add(1, 'year').format('YYYY');
     setYear(newYear);
   };
-  const content = useRenderYearCalendar({ year });
+
+  useEffect(() => {
+    getMoodYearCalendar(year);
+  }, [year]);
 
   return (
     <div className='flex justify-center items-center w-[342px] h-[586px] rounded-[20px] shadow-componentShadow'>
@@ -48,7 +53,11 @@ export default function YearCalendar({ handleColorChipToggle }) {
                 </div>
               ))}
             </div>
-            {content}
+            <RenderYearCalendar
+              monthlyList={monthlyList}
+              year={year}
+              month={1}
+            />
           </div>
           <ColorNameCode />
         </div>
