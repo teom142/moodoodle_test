@@ -9,13 +9,6 @@ class DiaryCreateSerializer(serializers.ModelSerializer):
         fields = ('diary_id', 'user_id', 'date', 'content')
         read_only_fields = ('diary_id', 'user_id')
 
-    def validate(self, data):
-        user_id = self.context['request'].user
-        date = data.get('date')
-
-        if Diary.objects.filter(user_id=user_id, date=date).exists():
-            raise serializers.ValidationError("이미 이 날짜에 작성된 일기가 있습니다.")
-        return data
     def create(self, validated_data):
         user_id = self.context['request'].user
         diary = Diary.objects.create(**validated_data, user_id=user_id)

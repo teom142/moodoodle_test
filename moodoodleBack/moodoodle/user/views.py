@@ -145,7 +145,7 @@ class UserMoodReportView(ListAPIView):
 
         mood_color_list = []
         for color, ratio in color_totals.items():
-            mood_color_list.append({'mood_color' : color, 'total_ratio' : ratio})
+            mood_color_list.append({'id' : color, 'mood_color' : "#" + color, 'total_ratio' : ratio})
         sorted_mood_color_list = sorted(mood_color_list, key = lambda x: x['total_ratio'], reverse = True)
 
         month_tag_list = []
