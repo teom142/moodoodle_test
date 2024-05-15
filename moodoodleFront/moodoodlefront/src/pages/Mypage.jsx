@@ -5,6 +5,7 @@ import ProfileCol from '../components/ProfileCol';
 import MypageMenu from '../components/MypageMenu';
 import ProfileManagement from '../components/ProfileManagement';
 import MonthlyReport from '../components/MonthlyReport';
+import useLogout from '../hooks/useLogout';
 
 export default function Mypage() {
   const [isClick, setIsClick] = useState(false);
@@ -23,6 +24,8 @@ export default function Mypage() {
   function handleColorChipToggle() {
     setIsClick((prev) => !prev);
   }
+
+  const { logout } = useLogout();
 
   return (
     <div>
@@ -43,6 +46,7 @@ export default function Mypage() {
             <MypageMenu
               handleReportComponent={handleReportComponent}
               handleProfileComponent={handleProfileComponent}
+              onClick={logout}
             />
           </>
         )}
