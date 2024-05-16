@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import ColorNameCode from './ColorNameCode';
-import useMoodYearCalendar from '../hooks/useMoodYearCalendar';
+import useMoodYearCalendar from '../hooks/useMoodYearCalendar.1';
 import RenderYearCalendar from './RenderYearCalendar';
 
 const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
@@ -53,12 +53,15 @@ export default function YearCalendar({ handleColorChipToggle }) {
                 </div>
               ))}
             </div>
-            <RenderYearCalendar
-              monthlyList={monthlyList}
-              year={year}
-              month={1}
-            />
+            <div className='flex flex-row w-[173px] grid grid-cols-12'>
+              <RenderYearCalendar
+                key={`${year}/01`}
+                monthlyList={monthlyList}
+                month={1}
+              />
+            </div>
           </div>
+
           <ColorNameCode />
         </div>
       </div>
