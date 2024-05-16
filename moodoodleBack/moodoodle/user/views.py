@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from . import serializers
 from .models import users
-from diary.models import Diary, Diary_Mood
+from diary.models import Diary
+from diary_mood.models import Diary_Mood
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, MypageSerializer, UserLogoutSerializer
 
 class UserRegistrationView(CreateAPIView):
@@ -60,7 +61,13 @@ class MypageAPIView(UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = MypageSerializer
     queryset = users.objects.all()
-    # lookup_field = 'id'
+    lookup_field = 'id'
+    
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = queryset.get(pk=self.request.user.user_id)
+        self.check_object_permissions(self.request, obj)
+        return obj
         
     def get(self, request, *args, **kwargs):
         id = request.user.id
@@ -145,7 +152,7 @@ class UserMoodReportView(ListAPIView):
 
         mood_color_list = []
         for color, ratio in color_totals.items():
-            mood_color_list.append({'id' : color, 'mood_color' : "#" + color, 'total_ratio' : ratio})
+            mood_color_list.append({'mood_color' : color, 'total_ratio' : ratio})
         sorted_mood_color_list = sorted(mood_color_list, key = lambda x: x['total_ratio'], reverse = True)
 
         month_tag_list = []

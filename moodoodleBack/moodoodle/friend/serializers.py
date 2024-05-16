@@ -1,7 +1,8 @@
 # friend serializers.py
 from rest_framework import serializers
 from user.models import users
-from diary.models import Diary, Diary_Mood
+from diary.models import Diary
+from diary_mood.models import Diary_Mood
 from .models import Friend
 from collections import defaultdict
 
