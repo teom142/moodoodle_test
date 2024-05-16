@@ -22,6 +22,7 @@ export default function DiaryWriting() {
   const onInputHandler = (e) => {
     setInputCount(e.target.value.length);
   };
+
   /*const handleSubmit = async () => {
     const postData = {
       user_id: localStorage.getItem('user_id'),

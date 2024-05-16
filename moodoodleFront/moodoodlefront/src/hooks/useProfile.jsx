@@ -4,8 +4,9 @@ import axios from 'axios';
 export default function useProfile() {
   const [profile, setProfile] = useState({
     nickname: '무두들러',
-    description: '아자아자 화이팅!',
+    description: '안녕하세요. 무두들러입니다!',
     profile_image: '/assets/profile.svg',
+    public: false,
   });
 
   const getUserProfile = async (body) => {

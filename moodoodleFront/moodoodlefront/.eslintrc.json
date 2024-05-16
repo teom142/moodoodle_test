@@ -1,0 +1,14 @@
+{
+  "extends": ["react-app", "prettier", "plugin:prettier/recommended"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": ["error", { "singleQuote": true, "endOfLine": "auto" }]
+  },
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    }
+  }
+}

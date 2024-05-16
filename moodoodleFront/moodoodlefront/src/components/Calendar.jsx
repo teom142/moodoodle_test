@@ -16,7 +16,7 @@ export default function Calendar({
     month: splited[1],
   });
   const [arr, setArr] = useState([null]);
-  const { daysDiary, getMoodCalendar } = useMoodCalendar();
+  const { getMoodCalendar } = useMoodCalendar();
 
   const handleSelectDate = (v) => {
     setSelectedDate(v);
@@ -51,7 +51,6 @@ export default function Calendar({
 
   useEffect(() => {
     getMoodCalendar(year_month.year, year_month.month);
-    console.log(year_month);
   }, [year_month]);
 
   return (
@@ -60,8 +59,8 @@ export default function Calendar({
         <div className='flex flex-row justify-between items-center w-[283px] h-[18px]'>
           <img
             src='/assets/leftArrow.svg'
-            alt='왼쪽 화살표'
-            className='w-[9px] h-[7px]'
+            alt='leftArrow'
+            className='w-[9px] h-[7px] cursor-pointer'
             onClick={() => handlePrevMonth(selectedDate)}
           />
           <p className='text-[17px] font-semibold text-darkNavy'>
@@ -70,8 +69,8 @@ export default function Calendar({
           </p>
           <img
             src='/assets/rightArrow.svg'
-            alt='오른쪽 화살표'
-            className='w-[9px] h-[7px]'
+            alt='rightArrow'
+            className='w-[9px] h-[7px] cursor-pointer'
             onClick={() => handleNextMonth(selectedDate)}
           />
         </div>

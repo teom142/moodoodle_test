@@ -8,6 +8,8 @@ import Home from './pages/Home';
 import Main from './pages/Main';
 import DiaryWritePage from './pages/DiaryWritePage';
 import AnalysisPage from './pages/AnalysisPage';
+import Mypage from './pages/Mypage';
+import NavigationBar from './components/NavigationBar';
 
 function App() {
   return (
@@ -16,10 +18,12 @@ function App() {
         <div className='bg-slate-100'>
           <section className='w-[390px] h-screen flex flex-col m-auto bg-white'>
             <Pc className='flex flex-col m-auto'>
-              <div className='flex-1'>
+              <div className='flex-1 relative'>
                 <Routes>
-                  {/* 시작화면 테스트 시 element에 Start 작성 */}
                   <Route exact path='/' element={<Home />}>
+                    <Route path='/start' element={<Start />} />
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/signup' element={<SignUp />} />
                     <Route path='/' element={<Main />} />
                     <Route
                       path='/diary/:selectedDate'
@@ -29,18 +33,31 @@ function App() {
                       path='/analysis/:selectedDate'
                       element={<AnalysisPage />}
                     />
+                    <Route path='/mypage' element={<Mypage />} />
                   </Route>
-                  <Route path='/start' element={<Start />} />
-                  <Route path='/login' element={<Login />} />
-                  <Route path='/signup' element={<SignUp />} />
                 </Routes>
+                <NavigationBar />
               </div>
             </Pc>
             <Mobile className='flex flex-col m-auto'>
-              <div className=''>
-                <div className=''>
-                  <p>이것은 모바일이다.</p>
-                </div>
+              <div className='flex-1'>
+                <Routes>
+                  <Route exact path='/' element={<Home />}>
+                    <Route path='/start' element={<Start />} />
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/signup' element={<SignUp />} />
+                    <Route path='/' element={<Main />} />
+                    <Route
+                      path='/diary/:selectedDate'
+                      element={<DiaryWritePage />}
+                    />
+                    <Route
+                      path='/analysis/:selectedDate'
+                      element={<AnalysisPage />}
+                    />
+                    <Route path='/mypage' element={<Mypage />} />
+                  </Route>
+                </Routes>
               </div>
             </Mobile>
           </section>
