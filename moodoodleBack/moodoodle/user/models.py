@@ -14,6 +14,17 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
+    # def create_superuser(self, id, password, **extra_fields):
+    #     extra_fields.setdefault('is_staff', True)
+    #     extra_fields.setdefault('is_superuser', True)
+    #     extra_fields.setdefault('is_active', True)
+
+    #     if extra_fields.get('is_staff') is not True:
+    #         raise ValueError(('Superuser must have is_staff=True.'))
+    #     if extra_fields.get('is_superuser') is not True:
+    #         raise ValueError(('Superuser must have is_superuser=True.'))
+    #     return self.create_user(id, password, **extra_fields)
+    
     def update_user(self, user_id, nickname, birthdate, profile_image, description, public):
         if not user_id:
             raise ValidationError('로그인이 필요합니다')
