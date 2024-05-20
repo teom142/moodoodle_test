@@ -1,0 +1,1 @@
+web: gunicorn moodoodle.wsgi --log-file -
