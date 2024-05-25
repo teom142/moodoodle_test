@@ -210,12 +210,12 @@ def predict(predict_sentence): # input = 감정분류하고자 하는 sentence
 
     bertmodel, vocab = get_kobert_model('skt/kobert-base-v1',tokenizer.vocab_file)
     model = BERTClassifier(bertmodel,  dr_rate = 0.5).to(device)
-    model.load_state_dict(torch.load("E:\폴더\개발\kobert_django\kobert_test\moodoodle\diary_mood\kobert\model.pt", map_location=device))
+    model.load_state_dict(torch.load('/home/ubuntu/goinfre/moodoodle_test/moodoodleBack/moodoodle/diary_mood/kobert/model.pt', map_location=device))
     data = [predict_sentence, '0']
     dataset_another = [data]
 
     another_test = BERTDataset(dataset_another, 0, 1, tokenizer, vocab, max_len, True, False) # 토큰화한 문장
-    test_dataloader = torch.utils.data.DataLoader(another_test, batch_size = batch_size, num_workers = 0) # torch 형식 변환
+    test_dataloader = torch.utils.data.DataLoader(another_test, batch_size = batch_size, num_workers = 5) # torch 형식 변환
 
     #model.eval()
     for batch_id, (token_ids, valid_length, segment_ids, label) in enumerate(tqdm(test_dataloader)):
