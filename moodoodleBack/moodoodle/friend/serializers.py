@@ -15,6 +15,15 @@ class FriendListSerializer(serializers.ModelSerializer):
     class Meta:
         model = users
         fields = ('nickname', 'profile_image', 'description')
+        
+class FriendRequestSerializer(serializers.ModelSerializer):
+    nickname = serializers.CharField(source='from_user.nickname')
+    profile_image = serializers.CharField(source='from_user.profile_image')
+    description = serializers.CharField(source='from_user.description')
+
+    class Meta:
+        model = Friend
+        fields = ('nickname', 'profile_image', 'description')
 
 class FriendCalendarSerializer(serializers.ModelSerializer):
     main_mood_color = serializers.SerializerMethodField()

@@ -2,17 +2,18 @@
 from calendar import monthrange
 from datetime import date
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveUpdateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from . import serializers
-from .models import users
+from .models import users, survey
+from drf_yasg.utils import swagger_auto_schema
 from diary.models import Diary
 from diary_mood.models import Diary_Mood
-from .serializers import UserRegistrationSerializer, UserLoginSerializer, MypageSerializer, UserLogoutSerializer
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, MypageSerializer, UserLogoutSerializer, DuplicatedSerializer, UserSurveySerializer
 
 class UserRegistrationView(CreateAPIView):
     serializer_class = UserRegistrationSerializer
@@ -31,7 +32,7 @@ class UserRegistrationView(CreateAPIView):
         return Response(response, status=status_code)
     
 class UserLoginView(CreateAPIView):
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
     serializer_class = UserLoginSerializer
     
     def post(self, request):
@@ -56,29 +57,48 @@ class UserLoginView(CreateAPIView):
                 'message' : "로그인에 실패하였습니다."
             }, status=status.HTTP_404_NOT_FOUND)
 
+class DuplicatedView(CreateAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = DuplicatedSerializer
     
-class MypageAPIView(UpdateAPIView):
-    permission_classes = (IsAuthenticated,)
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        id = request.data.get('id')
+        if users.objects.filter(id=id).exists():
+            response = {
+                'success' : False,
+                'status_code' : status.HTTP_403_FORBIDDEN,
+                'message' : "중복되는 아이디입니다.",
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
+        else:
+            return Response({
+            'success' : True,
+            'status_code': status.HTTP_200_OK,
+            'message' : "중복되지 않는 아이디입니다."
+        }, status=status.HTTP_200_OK)
+
+
+class MypageAPIView(RetrieveUpdateAPIView):
+    # permission_classes = (IsAuthenticated,)
     serializer_class = MypageSerializer
     queryset = users.objects.all()
-    lookup_field = 'id'
+    # lookup_field = 'id'
     
     def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = queryset.get(pk=self.request.user.user_id)
-        self.check_object_permissions(self.request, obj)
-        return obj
-        
+        id = self.kwargs.get('id')
+        return get_object_or_404(users, id=id)
+    
     def get(self, request, *args, **kwargs):
-        id = request.user.id
         try:
-            user = users.objects.get(id=id)
-            serializer = MypageSerializer(user)
+            user = self.get_object()
+            serializer_data = request.data
+            serializer = self.serializer_class(user, data=serializer_data, partial=True)
+            serializer.is_valid(raise_exception=True)
             response_data = {
                 'success' : True,
                 'status_code': status.HTTP_200_OK,
                 'message' : "요청에 성공하였습니다.",
-                'id' : id,
                 'data' : serializer.data
             }
             return Response(response_data, status=status.HTTP_200_OK)
@@ -90,15 +110,14 @@ class MypageAPIView(UpdateAPIView):
             }, status=status.HTTP_404_NOT_FOUND)
     
     def patch(self, request, *args, **kwargs):
-        id = request.user.id
         serializer_data = request.data
         try:
-            user = users.objects.get(id=id)
+            user = self.get_object()
         except users.DoesNotExist:
             return Response({
                 'success': False,
                 'status_code': status.HTTP_404_NOT_FOUND,
-                'message' : "유저가 존재하지 않습니다."
+                'message' : "해당 유저가 없습니다."
             }, status=status.HTTP_404_NOT_FOUND)
         serializer = self.serializer_class(
             user, data=serializer_data, partial=True
@@ -120,7 +139,7 @@ class MypageAPIView(UpdateAPIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 class UserMoodReportView(ListAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     queryset = Diary_Mood.objects.all()
     def get(self, request, year, month):
         year = self.kwargs.get('year')
@@ -137,34 +156,62 @@ class UserMoodReportView(ListAPIView):
         user_id = request.user
         diary_list = Diary.objects.filter(user_id=user_id, date__range=[start_date, end_date])
 
-        color_totals = {}
-        tag_totals = {}
+        mood_totals = {}
+
+        mood_mapping = {
+            "fear": "공포",
+            "surprise": "놀람",
+            "anger": "분노",
+            "sad": "슬픔",
+            "neutral": "중립",
+            "happy": "행복",
+            "disgust": "혐오"
+        }
+
+        mood_colors = {
+            "공포": "DBD3FB",
+            "놀람": "FEF4A0",
+            "분노": "FF9191",
+            "슬픔": "B5D3FF",
+            "중립": "B3F4B2",
+            "행복": "FBCFE0",
+            "혐오": "FECFAD"
+        }
 
         for diary in diary_list:
-            mood_list = Diary_Mood.objects.filter(diary_id=diary.diary_id)
-            for mood in mood_list:
-                if mood.color not in color_totals:
-                    color_totals[mood.color] = 0
-                color_totals[mood.color] += mood.ratio
-                if mood.title not in tag_totals:
-                    tag_totals[mood.title] = 0
-                tag_totals[mood.title] += mood.ratio
+            moods = Diary_Mood.objects.filter(diary_id=diary.diary_id).first()
+            if moods:
+                for eng_name, kor_name in mood_mapping.items():
+                    ratio = int(getattr(moods, eng_name, 0.0)*100)
+                    if kor_name not in mood_totals:
+                        mood_totals[kor_name] = 0
+                    mood_totals[kor_name] += ratio
+
 
         mood_color_list = []
-        for color, ratio in color_totals.items():
-            mood_color_list.append({'mood_color' : color, 'total_ratio' : ratio})
-        sorted_mood_color_list = sorted(mood_color_list, key = lambda x: x['total_ratio'], reverse = True)
+        for kor_name, ratio in mood_totals.items():
+            if ratio > 0:
+                mood_color_list.append({
+                    'mood_name': kor_name,
+                    'mood_color': "#" + mood_colors[kor_name],
+                    'total_ratio': ratio
+                })
+        sorted_mood_color_list = sorted(mood_color_list, key=lambda x: x['total_ratio'], reverse=True)
 
-        month_tag_list = []
-        for title, ratio in tag_totals.items():
-            color = Diary_Mood.objects.filter(title = title).first().color
-            month_tag_list.append({'tag_title': title, 'tag_color' : color, 'tag_ratio': ratio})
+        mood_tag_list = []
+        for kor_name, ratio in sorted(mood_totals.items(), key=lambda item: item[1], reverse=True)[:5]:
+            if ratio > 0:
+                mood_tag_list.append({
+                    'tag_name': kor_name,
+                    'tag_color': mood_colors[kor_name],
+                    'tag_ratio': ratio
+                })
 
-        sorted_month_tag_list = sorted(month_tag_list, key = lambda x: x['tag_ratio'], reverse = True)[:5]
-        detail = [
-            {'mood_color_list' : sorted_mood_color_list},
-            {'month_tag_list' : sorted_month_tag_list}
-        ]
+        detail = {
+            'mood_color_list': sorted_mood_color_list,
+            'mood_tag_list': mood_tag_list
+        }
+
         return Response({
             'success' : True,
             'status_code': status.HTTP_200_OK,
@@ -172,22 +219,38 @@ class UserMoodReportView(ListAPIView):
             'detail': detail
         }, status=status.HTTP_200_OK)
 
-
-class UserLogoutView(RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)
+class UserLogoutView(CreateAPIView):
+    # permission_classes = (IsAuthenticated,)
     queryset = users.objects.all()
     serializer_class = UserLogoutSerializer
 
-    def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = queryset.get(pk=self.request.user.user_id)
-        self.check_object_permissions(self.request, obj)
-        return obj
-
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         logout(request)
+        response_data = {
+            'success': True,
+            'status code': status.HTTP_200_OK,
+            'message': "로그아웃 되었습니다.",
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
+        
+class UserSurveyView(CreateAPIView):
+    # permission_classes = (IsAuthenticated,)
+    serializer_class = UserSurveySerializer
+    def post(self, request, *args, **kwargs):
+        user_id = request.data.get('uesr_id')
+        positive_answer = request.data.getlist('positive_answer')
+        negative_answer = request.data.getlist('negative_answer')
+        for answer in positive_answer:
+            seralizer = self.serializer_class(context={'question' : "positive", 'answer' : answer})
+            seralizer.is_valid(raise_exception=True)
+            seralizer.save()
+        for answer in negative_answer:
+            seralizer = self.serializer_class(context={'question' : "negative", 'answer' : answer})
+            seralizer.is_valid(raise_exception=True)
+            seralizer.save()
+
         return Response({
-                'success' : True,
-                'status_code': status.HTTP_200_OK,
-                'message': "로그아웃에 성공하였습니다."
-            }, status=status.HTTP_200_OK)
+            'success' : True,
+            'status_code': status.HTTP_201_CREATED,
+            'message' : "요청에 성공하였습니다."
+        },status=status.HTTP_201_CREATED)

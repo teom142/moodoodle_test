@@ -14,17 +14,6 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-    # def create_superuser(self, id, password, **extra_fields):
-    #     extra_fields.setdefault('is_staff', True)
-    #     extra_fields.setdefault('is_superuser', True)
-    #     extra_fields.setdefault('is_active', True)
-
-    #     if extra_fields.get('is_staff') is not True:
-    #         raise ValueError(('Superuser must have is_staff=True.'))
-    #     if extra_fields.get('is_superuser') is not True:
-    #         raise ValueError(('Superuser must have is_superuser=True.'))
-    #     return self.create_user(id, password, **extra_fields)
-    
     def update_user(self, user_id, nickname, birthdate, profile_image, description, public):
         if not user_id:
             raise ValidationError('로그인이 필요합니다')
@@ -35,7 +24,7 @@ class users(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True) 
     id = models.CharField(max_length=20, unique=True)
     password = models.CharField(max_length=255)
-    nickname = models.CharField(max_length=20)
+    nickname = models.CharField(max_length=20, blank=True)
     created = models.DateField(auto_now_add=True)
     birthdate = models.DateField()
     profile_image = models.CharField(max_length=50, blank=True, null=True)
@@ -49,3 +38,23 @@ class users(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = 'users'
+
+class SurveyManager(models.Manager):
+    def create_survey(self, user_id, question, answer):
+        survey = self.model(
+            user_id=user_id,
+            question=question,
+            answer=answer
+        )
+        survey.save(using=self._db)
+        return survey
+    
+class survey(models.Model):
+    survey_id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(users, on_delete=models.CASCADE, db_column='user_id')
+    question = models.CharField(max_length=50)
+    answer = models.CharField(max_length=50)
+
+    objects = SurveyManager()
+    class Meta:
+        db_table = 'survey'

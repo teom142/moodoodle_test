@@ -12,7 +12,7 @@ from .kobert.result import predict
 # Create your views here.
 class DiaryMoodCreateView(CreateAPIView):
     serializer_class = DiaryMoodCreateSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     queryset = Diary_Mood.objects.all()
     def get_object(self):
         diary_id = self.kwargs.get('pk')

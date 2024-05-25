@@ -1,6 +1,4 @@
 import numpy as np
-import torch
-from torch import nn
 
 class BERTSentenceTransform:
     r"""BERT style data transformation.

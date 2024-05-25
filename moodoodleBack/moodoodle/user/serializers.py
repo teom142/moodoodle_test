@@ -1,7 +1,6 @@
 from rest_framework import serializers
-from django.contrib.auth import authenticate, login
-from django.utils import timezone
-from .models import users
+from .models import users, survey
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,4 +25,22 @@ class UserLogoutSerializer(serializers.Serializer):
 class MypageSerializer(serializers.ModelSerializer):
     class Meta:
         model = users
-        fields = ('id', 'nickname', 'description', 'public', 'profile_image')
+        fields = ('nickname', 'description', 'public', 'profile_image')
+
+class DuplicatedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = users
+        fields = ['id']
+
+class UserSurveySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = survey
+        fields = ('question', 'answer')
+        read_only_fields = ['question']
+
+    def create(self, validated_data):
+        question = self.context['question']
+        answer = self.context['answer']
+        user_id = self.context['request'].user
+        survey = survey.objects.create(user_id=user_id, question=question, answer=answer)
+        return survey

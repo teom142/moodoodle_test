@@ -11,25 +11,32 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import environ
-
-env = environ.Env()
-environ.Env.read_env()
+import os
+from environ import ImproperlyConfigured
+from dotenv import load_dotenv
+load_dotenv()
+def get_env_variable(var_name):
+  try:
+    return os.environ[var_name]
+  except KeyError:
+    error_msg = 'Set the {} environment variable'.format(var_name)
+    raise ImproperlyConfigured(error_msg)
+SECRET_KEY = get_env_variable("SECRET_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
 
 # Application definition
 
@@ -41,21 +48,24 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_yasg',
     'user.apps.UserConfig',
     'diary.apps.DiaryConfig',
     'friend.apps.FriendConfig',
+    'music.apps.MusicConfig',
     'diary_mood.apps.DiaryMoodConfig',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'moodoodle.urls'
@@ -85,11 +95,11 @@ WSGI_APPLICATION = 'moodoodle.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env("DB_NAME"),
-        'USER': env("DB_USER"),
-        'PASSWORD': env("DB_PASSWORD"),
-        'HOST': env("DB_HOST"),
-        'PORT': env("DB_PORT"),
+        'NAME': get_env_variable("DB_NAME"),
+        'USER': get_env_variable("DB_USER"),
+        'PASSWORD': get_env_variable("DB_PASSWORD"),
+        'HOST': get_env_variable("DB_HOST"),
+        'PORT': get_env_variable("DB_PORT"),
     }
 }
 
@@ -136,3 +146,36 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.users'
+
+# 모든 요청을 허용(CORS_ORIGIN_WHITELIST와 CORS_ALLOW_ALL_ORIGINS 중 하나만 사용 권장)
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'https://port-0-moodoodle-test-rm6l2llw4xv3nr.sel5.cloudtype.app']
+CORS_ALLOW_CREDENTIALS = True
+
+# CSRF_COOKIE_SAMESITE = 'None'
+# CSRF_COOKIE_SECURE = False
+# SESSION_COOKIE_SAMESITE = 'None'
+# SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_COOKIE_HTTPONLY = False
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+    'DEFAULT_PROTOCOL': 'https',
+    'DEFAULT_API_URL': 'https://port-0-moodoodle-test-rm6l2llw4xv3nr.sel5.cloudtype.app',
+
+}
+
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+    "x-csrftoken",
+    "x-requested-with",
+    "withCredentials",
+]
