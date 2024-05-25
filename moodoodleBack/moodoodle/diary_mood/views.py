@@ -38,7 +38,7 @@ class DiaryMoodCreateView(CreateAPIView):
     def create(self, request, diary_id, *args, **kwargs):
         mood_data = predict(request.data.get('content'))
         color = ['DBD3FB','FEF4A0','FF9191','B5D3FF','B3F4B2','FBCFE0','FECFAD']
-        Diary_Mood.objects.create_mood(diary_id = diary_id,
+        mood = Diary_Mood.objects.create_mood(diary_id = diary_id,
                                               fear=mood_data[0],
                                               surprised=mood_data[1],
                                               anger=mood_data[2],
@@ -47,3 +47,4 @@ class DiaryMoodCreateView(CreateAPIView):
                                               happy=mood_data[5],
                                               aversion=mood_data[6],
                                               color=color[mood_data.index(max(mood_data))])
+        return mood.diary_mood_id
