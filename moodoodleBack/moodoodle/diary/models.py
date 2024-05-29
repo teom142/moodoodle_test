@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 # Create your models here.
 class DiaryManager(models.Manager):
-    def post_diary(self, user_id, date, content):
+    def create(self, user_id, date, content):
         diary = self.model(
             user_id=user_id,
             date=date,

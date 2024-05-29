@@ -7,12 +7,11 @@ from collections import defaultdict
 class DiaryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
-        fields = ('diary_id', 'date', 'content')
-        read_only_fields = ['diary_id']
+        fields = ('diary_id', 'user_id', 'date', 'content')
+        read_only_fields = ('diary_id',)
 
     def create(self, validated_data):
-        user_id = self.context['request'].user
-        diary = Diary.objects.create(**validated_data, user_id=user_id)
+        diary = Diary.objects.create(**validated_data)
         return diary
 
 class DiaryUpdateSerializer(serializers.ModelSerializer):
@@ -67,9 +66,6 @@ class DiaryDetailSerializer(serializers.ModelSerializer):
         details = sorted(details, key=lambda x: x["ratio"], reverse=True)
         return details
 
-
-
-    
 class CalendarSerializer(serializers.ModelSerializer):
     main_mood_color = serializers.SerializerMethodField()
 
@@ -81,5 +77,4 @@ class CalendarSerializer(serializers.ModelSerializer):
         moods = Diary_Mood.objects.get(diary_id=obj.diary_id)
         main_mood_color = moods.color
         return main_mood_color
-
 

@@ -9,7 +9,7 @@ from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveUpdate
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from . import serializers
-from .models import users, survey
+from .models import users, Survey
 from drf_yasg.utils import swagger_auto_schema
 from diary.models import Diary
 from diary_mood.models import Diary_Mood
@@ -32,7 +32,7 @@ class UserRegistrationView(CreateAPIView):
         return Response(response, status=status_code)
     
 class UserLoginView(CreateAPIView):
-    # permission_classes = (AllowAny,)
+    permission_classes = (AllowAny,)
     serializer_class = UserLoginSerializer
     
     def post(self, request):
@@ -141,7 +141,7 @@ class MypageAPIView(RetrieveUpdateAPIView):
 class UserMoodReportView(ListAPIView):
     # permission_classes = [IsAuthenticated]
     queryset = Diary_Mood.objects.all()
-    def get(self, request, year, month):
+    def get(self, request, id, year, month):
         year = self.kwargs.get('year')
         month = self.kwargs.get('month')
         if date(year, month, 1) > date.today():
@@ -153,8 +153,9 @@ class UserMoodReportView(ListAPIView):
 
         start_date = date(year, month, 1)
         end_date = date(year, month, monthrange(year, month)[1])
-        user_id = request.user
-        diary_list = Diary.objects.filter(user_id=user_id, date__range=[start_date, end_date])
+        id =self.kwargs.get('id')
+        user = users.objects.get(id=id)
+        diary_list = Diary.objects.filter(user_id=user.user_id, date__range=[start_date, end_date])
 
         mood_totals = {}
 
@@ -178,6 +179,8 @@ class UserMoodReportView(ListAPIView):
             "혐오": "FECFAD"
         }
 
+        total_ratio = 0
+
         for diary in diary_list:
             moods = Diary_Mood.objects.filter(diary_id=diary.diary_id).first()
             if moods:
@@ -186,25 +189,34 @@ class UserMoodReportView(ListAPIView):
                     if kor_name not in mood_totals:
                         mood_totals[kor_name] = 0
                     mood_totals[kor_name] += ratio
+                    total_ratio += ratio
+
+        if total_ratio == 0:
+            return Response({
+                'success': False,
+                'status_code' : status.HTTP_404_NOT_FOUND,
+                'message' : "감정 분석 데이터가 없습니다"
+            }, status=status.HTTP_404_NOT_FOUND)
+
 
 
         mood_color_list = []
         for kor_name, ratio in mood_totals.items():
             if ratio > 0:
                 mood_color_list.append({
-                    'mood_name': kor_name,
-                    'mood_color': "#" + mood_colors[kor_name],
-                    'total_ratio': ratio
+                    'id': kor_name,
+                    'color': "#" + mood_colors[kor_name],
+                    'value': round((ratio / total_ratio) * 100, 2)
                 })
-        sorted_mood_color_list = sorted(mood_color_list, key=lambda x: x['total_ratio'], reverse=True)
+        sorted_mood_color_list = sorted(mood_color_list, key=lambda x: x['value'], reverse=True)
 
         mood_tag_list = []
-        for kor_name, ratio in sorted(mood_totals.items(), key=lambda item: item[1], reverse=True)[:5]:
+        for kor_name, ratio in sorted(mood_totals.items(), key=lambda item: item[1], reverse=True)[:3]:
             if ratio > 0:
                 mood_tag_list.append({
                     'tag_name': kor_name,
                     'tag_color': mood_colors[kor_name],
-                    'tag_ratio': ratio
+                    'tag_ratio': round((ratio / total_ratio) * 100, 2)
                 })
 
         detail = {
@@ -236,21 +248,45 @@ class UserLogoutView(CreateAPIView):
 class UserSurveyView(CreateAPIView):
     # permission_classes = (IsAuthenticated,)
     serializer_class = UserSurveySerializer
-    def post(self, request, *args, **kwargs):
-        user_id = request.data.get('uesr_id')
-        positive_answer = request.data.getlist('positive_answer')
-        negative_answer = request.data.getlist('negative_answer')
-        for answer in positive_answer:
-            seralizer = self.serializer_class(context={'question' : "positive", 'answer' : answer})
-            seralizer.is_valid(raise_exception=True)
-            seralizer.save()
-        for answer in negative_answer:
-            seralizer = self.serializer_class(context={'question' : "negative", 'answer' : answer})
-            seralizer.is_valid(raise_exception=True)
-            seralizer.save()
+    def post(self, request, question):
+        if question not in ['positive', 'negative']:
+            return Response({
+                'success' : False,
+                'status_code' : status.HTTP_400_BAD_REQUEST,
+                'message' : "question 파라미터 값이 잘못되었습니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        answers = request.data.get('answer', [])
+
+        if not answers:
+            return Response({
+                'success' : False,
+                'status_code' : status.HTTP_400_BAD_REQUEST,
+                'message' : "장르를 1개 이상 선택해주세요."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        if not isinstance(answers, list):
+            return Response({
+                'success': False,
+                'status_code': status.HTTP_400_BAD_REQUEST,
+                'message' : "답변은 배열 형식이어야 합니다."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        id = request.data.get('id')
+        user_id = users.objects.get(id=id)
+        survey_responses = []
+        for answer in answers:
+            if Survey.objects.filter(question=question, answer=answer, user_id=user_id).exists():
+                continue
+            survey_data = {'answer': answer}
+            serializer = UserSurveySerializer(data=survey_data, context={'user_id': user_id, 'question': question})
+            if serializer.is_valid():
+                survey_responses.append(serializer.save())
+
+        response_serializer = UserSurveySerializer(survey_responses, many=True)
 
         return Response({
             'success' : True,
             'status_code': status.HTTP_201_CREATED,
-            'message' : "요청에 성공하였습니다."
+            'message' : "요청에 성공하였습니다.",
+            "data" : response_serializer.data
         },status=status.HTTP_201_CREATED)
