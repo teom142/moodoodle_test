@@ -27,6 +27,28 @@ class MypageSerializer(serializers.ModelSerializer):
         model = users
         fields = ('nickname', 'description', 'public', 'profile_image')
 
+    def update(self, instance, validated_data):
+        nickname = validated_data.get('nickname')
+        if nickname:
+            instance.nickname = nickname
+
+        description = validated_data.get('description')
+        if description:
+            instance.description = description
+        else:
+            instance.description = ''
+
+        public = validated_data.get('public')
+        if public is not None:
+            instance.public = public
+
+        profile_image = validated_data.get('profile_image')
+        if profile_image:
+            instance.profile_image = profile_image
+
+        instance.save()
+        return instance
+
 class DuplicatedSerializer(serializers.ModelSerializer):
     class Meta:
         model = users

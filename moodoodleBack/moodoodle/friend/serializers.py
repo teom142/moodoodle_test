@@ -13,7 +13,7 @@ class FriendSerializer(serializers.ModelSerializer):
 class FriendListSerializer(serializers.ModelSerializer):
     class Meta:
         model = users
-        fields = ('id', 'nickname', 'profile_image', 'description')
+        fields = ('id', 'nickname', 'profile_image', 'description', 'public')
         
 class FriendRequestSerializer(serializers.ModelSerializer):
     id = serializers.CharField(source='from_user.id')

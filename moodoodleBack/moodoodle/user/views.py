@@ -14,6 +14,7 @@ from drf_yasg.utils import swagger_auto_schema
 from diary.models import Diary
 from diary_mood.models import Diary_Mood
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, MypageSerializer, UserLogoutSerializer, DuplicatedSerializer, UserSurveySerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class UserRegistrationView(CreateAPIView):
     serializer_class = UserRegistrationSerializer
@@ -83,6 +84,7 @@ class MypageAPIView(RetrieveUpdateAPIView):
     # permission_classes = (IsAuthenticated,)
     serializer_class = MypageSerializer
     queryset = users.objects.all()
+    parser_classes = (MultiPartParser, FormParser)
     # lookup_field = 'id'
     
     def get_object(self):
@@ -270,17 +272,28 @@ class UserSurveyView(CreateAPIView):
                 'status_code': status.HTTP_400_BAD_REQUEST,
                 'message' : "답변은 배열 형식이어야 합니다."
             }, status=status.HTTP_400_BAD_REQUEST)
+        genre = ["인디/포크", "록발라드", "록/얼터너티브", "R&B", "댄스", "힙합", "발라드"]
 
         id = request.data.get('id')
         user_id = users.objects.get(id=id)
         survey_responses = []
         for answer in answers:
-            if Survey.objects.filter(question=question, answer=answer, user_id=user_id).exists():
-                continue
-            survey_data = {'answer': answer}
-            serializer = UserSurveySerializer(data=survey_data, context={'user_id': user_id, 'question': question})
-            if serializer.is_valid():
-                survey_responses.append(serializer.save())
+            if answer == "상관없음":
+                for i in genre:
+                    if Survey.objects.filter(question=question, answer=i, user_id=user_id).exists():
+                        continue
+                    survey_data = {'answer' : i}
+                    serializer = UserSurveySerializer(data=survey_data,
+                                                      context={'user_id': user_id, 'question': question})
+                    if serializer.is_valid():
+                        survey_responses.append(serializer.save())
+            else:
+                if Survey.objects.filter(question=question, answer=answer, user_id=user_id).exists():
+                    continue
+                survey_data = {'answer': answer}
+                serializer = UserSurveySerializer(data=survey_data, context={'user_id': user_id, 'question': question})
+                if serializer.is_valid():
+                    survey_responses.append(serializer.save())
 
         response_serializer = UserSurveySerializer(survey_responses, many=True)
 

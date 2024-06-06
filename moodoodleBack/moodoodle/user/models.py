@@ -27,7 +27,7 @@ class users(AbstractBaseUser, PermissionsMixin):
     nickname = models.CharField(max_length=20, blank=True)
     created = models.DateField(auto_now_add=True)
     birthdate = models.DateField()
-    profile_image = models.CharField(max_length=50, blank=True, null=True)
+    profile_image = models.ImageField(upload_to="profile_image/", blank=True, null=True)
     description = models.CharField(max_length=50, blank=True, null=True)
     public = models.BooleanField(default=False)
 

@@ -6,7 +6,7 @@ class Music(models.Model):
     title = models.CharField(max_length=50)
     artist = models.CharField(max_length=20)
     genre = models.CharField(max_length=20)
-    cover = models.ImageField(null=True, upload_to='', blank=True)
+    cover = models.ImageField(upload_to="albumcover/")
 
     class Meta:
         db_table = 'music'
