@@ -151,7 +151,7 @@ AUTH_USER_MODEL = 'user.users'
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://43.203.49.149:5000', 'https://moodoodle.netlify.app/','https://moodoodle.store']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://43.203.49.149:5000', 'https://moodoodle.netlify.app','https://moodoodle.store', 'https://main--moodoodle.netlify.app']
 CORS_ALLOW_CREDENTIALS = True
 
 # CSRF_COOKIE_SAMESITE = 'None'
@@ -160,7 +160,6 @@ CORS_ALLOW_CREDENTIALS = True
 # SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_COOKIE_HTTPONLY = False
-SECURE_SSL_REDIRECT = False
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
