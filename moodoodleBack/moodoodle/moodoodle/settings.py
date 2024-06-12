@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'music.apps.MusicConfig',
     'diary_mood.apps.DiaryMoodConfig',
     'corsheaders',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -151,7 +152,7 @@ AUTH_USER_MODEL = 'user.users'
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://43.203.49.149:5000', 'https://moodoodle.netlify.app','https://moodoodle.store', 'https://main--moodoodle.netlify.app']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 'http://43.203.49.149:5000', 'https://moodoodle.netlify.app','https://moodoodle.store', 'https://main--moodoodle.netlify.app', 'https://www.moodoodle.store']
 CORS_ALLOW_CREDENTIALS = True
 
 # CSRF_COOKIE_SAMESITE = 'None'
@@ -160,6 +161,11 @@ CORS_ALLOW_CREDENTIALS = True
 # SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_COOKIE_HTTPONLY = False
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -179,3 +185,20 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
     "withCredentials",
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+AWS_ACCESS_KEY_ID = get_env_variable("S3_KEY")
+AWS_SECRET_ACCESS_KEY = get_env_variable("S3_SECRET_KEY")
+
+AWS_STORAGE_BUCKET_NAME = "moodoodlebucket"
+
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME + ".s3.ap-northeast-2.amazonaws.com"
+AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_AUTH = False
+
+MEDIA_URL = "https://moodoodlebucket.s3.ap-northeast-2.amazonaws.com/"

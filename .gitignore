@@ -264,3 +264,4 @@ pyrightconfig.json
 
 migrations
 sqlite3
+.config
