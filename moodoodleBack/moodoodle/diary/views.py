@@ -108,7 +108,10 @@ class DiaryUpdateView(RetrieveUpdateAPIView):
         serializer = self.get_serializer(self.get_object(), data=data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        DiaryMoodCreateView.create(self, request=request, diary_id=serializer.data.get("diary_id"))
+        diary_id = serializer.data.get("diary_id")
+        diary = Diary_Mood.filter(diary_id = diary_id)
+        diary.delete()
+        DiaryMoodCreateView.create(self, request=request, diary_id=diary_id)
         return Response({
             'success' : True,
             'status_code' : status.HTTP_200_OK,

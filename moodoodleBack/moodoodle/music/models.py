@@ -1,5 +1,6 @@
 # music models.py
 from django.db import models
+from diary.models import Diary
 
 class Music(models.Model):
     music_id = models.AutoField(primary_key=True)
@@ -24,3 +25,11 @@ class Music_Mood(models.Model):
 
     class Meta:
         db_table = 'music_mood'
+
+class Music_Mapping(models.Model):
+    music_id = models.ForeignKey(Music, on_delete=models.CASCADE, db_column='music_id', null=True, blank=True)
+    diary_id = models.ForeignKey(Diary, on_delete=models.CASCADE, db_column='diary_id')
+    similarity = models.FloatField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'music_mapping'

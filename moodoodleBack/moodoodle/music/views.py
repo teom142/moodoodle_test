@@ -4,7 +4,8 @@ from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import MusicSerializer, MusicMooodSerializer
-from .models import Music_Mood, Music
+from .models import Music_Mood, Music, Music_Mapping
+from diary.models import Diary
 from diary_mood.models import Diary_Mood
 from user.models import users, Survey
 from sklearn.metrics.pairwise import cosine_similarity
@@ -45,8 +46,8 @@ class MusicMoodView(CreateAPIView):
     #     return get_object_or_404(Music_Mood, music_id=music_id)
 
     def get(self, request, *args, **kwargs):
-        diary_id = self.kwargs.get('diary_id')
-        id = self.kwargs.get('id')
+        diary_id = kwargs.get('diary_id')
+        id = kwargs.get('id')
 
         user = users.objects.get(id=id)
         diary_mood = Diary_Mood.objects.get(diary_id=diary_id)
@@ -96,3 +97,49 @@ class MusicMoodView(CreateAPIView):
             "diary_id" : diary_id,
             "recomand_music" : sim_music[random_music(sim_music)]
         }, status=status.HTTP_200_OK)
+
+class MusicMappingView(CreateAPIView):
+    serializer_class = MusicSerializer
+
+    def get(self, request, *args, **kwargs):
+        diary_id = self.kwargs.get('diary_id')
+        id = self.kwargs.get('id')
+        
+        diary = Diary.objects.get(diary_id=diary_id)
+        music = MusicMoodView().get(self, request, diary_id=diary_id, id=id)
+        recommended_music = music.data.get('recomand_music', {})
+
+        try:
+            mapping_instance = Music_Mapping.objects.get(diary_id=diary)
+            music_id = mapping_instance.music_id
+            similarity = mapping_instance.similarity
+            serializer = self.serializer_class(music_id)
+            
+            return Response({
+                'success': True,
+                'status_code': status.HTTP_201_CREATED,
+                'message': "요청에 성공하였습니다.",
+                'diary_id' : diary_id,
+                'recomand_music' : {
+                    'similarity': similarity,
+                    'music': serializer.data
+                    }
+            }, status=status.HTTP_201_CREATED)
+        except Music_Mapping.DoesNotExist:
+            mapping_instance = Music_Mapping.objects.create(diary_id=diary)
+            music_id = recommended_music['music']['music_id']
+            similarity = recommended_music['similarity']
+
+            if music_id is not None:
+                music_instance = Music.objects.get(music_id=music_id)
+                mapping_instance.similarity = similarity
+                mapping_instance.music_id = music_instance
+                mapping_instance.save()
+
+            return Response({
+                'success': True,
+                'status_code': status.HTTP_201_CREATED,
+                'message': "요청에 성공하였습니다.",
+                'diary_id' : diary_id,
+                'recomand_music' : recommended_music
+            }, status=status.HTTP_201_CREATED)
