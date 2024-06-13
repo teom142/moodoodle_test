@@ -5,7 +5,7 @@ from datetime import date
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveUpdateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveUpdateAPIView, ListAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from . import serializers
@@ -244,6 +244,29 @@ class UserLogoutView(CreateAPIView):
             'success': True,
             'status code': status.HTTP_200_OK,
             'message': "로그아웃 되었습니다.",
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+class UserDeleteView(DestroyAPIView):
+    serializer_class = UserLogoutSerializer
+    queryset = users.objects.all()        
+
+    def delete(self, request, *args, **kwargs):
+        id = kwargs.get('id')
+        user = users.objects.get(id = id)
+        diary = Diary.objects.filter(user_id = user)
+        for diary_i in diary:
+            diary_mood = Diary_Mood.objects.get(diary_id = diary_i.diary_id)
+            diary_mood.delete()
+            diary_i.delete()
+            # diary = Diary.objects.get(user_id = user)
+        
+        user.delete()
+
+        response_data = {
+            'success': True,
+            'status code': status.HTTP_200_OK,
+            'message': "삭제 되었습니다.",
         }
         return Response(response_data, status=status.HTTP_200_OK)
         

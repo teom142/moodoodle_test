@@ -1,7 +1,7 @@
 #user/urls.py
 from django.urls import path
 
-from .views import UserRegistrationView, UserLoginView, MypageAPIView, UserLogoutView, UserMoodReportView, DuplicatedView, UserSurveyView
+from .views import UserRegistrationView, UserLoginView, MypageAPIView, UserLogoutView, UserMoodReportView, DuplicatedView, UserSurveyView, UserDeleteView
 
 
 app_name = 'user'
@@ -13,5 +13,6 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view()),
     path('mypage/<str:id>/', MypageAPIView.as_view()),
     path('mypage/report/<str:id>/<int:year>/<int:month>/', UserMoodReportView.as_view()),
-    path('survey/<str:question>/', UserSurveyView.as_view())
+    path('survey/<str:question>/', UserSurveyView.as_view()),
+    path('delete/<str:id>/', UserDeleteView.as_view())
 ]
