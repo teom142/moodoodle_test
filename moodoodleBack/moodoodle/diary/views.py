@@ -109,7 +109,7 @@ class DiaryUpdateView(RetrieveUpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         diary_id = serializer.data.get("diary_id")
-        diary = Diary_Mood.filter(diary_id = diary_id)
+        diary = Diary_Mood.objects.filter(diary_id = diary_id)
         diary.delete()
         DiaryMoodCreateView.create(self, request=request, diary_id=diary_id)
         return Response({
