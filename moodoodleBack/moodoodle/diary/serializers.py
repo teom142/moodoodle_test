@@ -35,12 +35,12 @@ class DiaryDetailSerializer(serializers.ModelSerializer):
 
         mood_mapping = {
             "fear": "공포",
-            "surprise": "놀람",
+            "surprised": "놀람",
             "anger": "분노",
             "sad": "슬픔",
-            "neutral": "중립",
+            "normal": "중립",
             "happy": "행복",
-            "disgust": "혐오"
+            "aversion": "혐오"
         }
 
         mood_colors = {
@@ -56,7 +56,7 @@ class DiaryDetailSerializer(serializers.ModelSerializer):
         if moods:
             for eng_name, kor_name in mood_mapping.items():
                 ratio = getattr(moods, eng_name, 0.0)
-                if ratio > 0.0:
+                if ratio >= 0.01:
                     details.append({
                         "mood_name": kor_name,
                         "mood_color": mood_colors[kor_name],

@@ -163,12 +163,12 @@ class UserMoodReportView(ListAPIView):
 
         mood_mapping = {
             "fear": "공포",
-            "surprise": "놀람",
+            "surprised": "놀람",
             "anger": "분노",
             "sad": "슬픔",
-            "neutral": "중립",
+            "normal": "중립",
             "happy": "행복",
-            "disgust": "혐오"
+            "aversion": "혐오"
         }
 
         mood_colors = {
@@ -301,7 +301,7 @@ class UserSurveyView(CreateAPIView):
         user_id = users.objects.get(id=id)
         survey_responses = []
         for answer in answers:
-            if answer == "상관없음":
+            if answer == "상관 없음":
                 for i in genre:
                     if Survey.objects.filter(question=question, answer=i, user_id=user_id).exists():
                         continue

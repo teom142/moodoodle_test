@@ -18,12 +18,20 @@ class FriendListSerializer(serializers.ModelSerializer):
 class FriendRequestSerializer(serializers.ModelSerializer):
     id = serializers.CharField(source='from_user.id')
     nickname = serializers.CharField(source='from_user.nickname')
-    profile_image = serializers.CharField(source='from_user.profile_image')
+    profile_image = serializers.SerializerMethodField()
     description = serializers.CharField(source='from_user.description')
 
     class Meta:
         model = Friend
         fields = ('id', 'nickname', 'profile_image', 'description')
+
+    def get_profile_image(self, obj):
+        user = users.objects.get(id=obj.from_user.id)
+        if user and user.profile_image:
+            profile_image = 'https://moodoodlebucket.s3.ap-northeast-2.amazonaws.com/' + str(user.profile_image)
+            return profile_image
+        else:
+            return None
 
 class FriendCalendarSerializer(serializers.ModelSerializer):
     main_mood_color = serializers.SerializerMethodField()
