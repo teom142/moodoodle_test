@@ -27,6 +27,7 @@ class Music_Mood(models.Model):
         db_table = 'music_mood'
 
 class Music_Mapping(models.Model):
+    music_mapping_id = models.AutoField(primary_key=True)
     music_id = models.ForeignKey(Music, on_delete=models.CASCADE, db_column='music_id', null=True, blank=True)
     diary_id = models.ForeignKey(Diary, on_delete=models.CASCADE, db_column='diary_id')
     similarity = models.FloatField(null=True, blank=True)

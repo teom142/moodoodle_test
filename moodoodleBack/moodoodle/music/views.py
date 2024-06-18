@@ -3,18 +3,18 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import MusicSerializer, MusicMooodSerializer
+from .serializers import MusicSerializer, MusicMoodSerializer, MusicMappingSerializer
 from .models import Music_Mood, Music, Music_Mapping
 from diary.models import Diary
 from diary_mood.models import Diary_Mood
 from user.models import users, Survey
 from sklearn.metrics.pairwise import cosine_similarity
 import random as r
+from diary_mood.kobert.result import predict
 
 def random_music(lis):
     num = r.randint(0, len(lis) - 1)
     return num
-
 
 class MusicCreateView(CreateAPIView):
     # permission_classes = [IsAuthenticated]
@@ -38,8 +38,26 @@ class MusicListView(ListAPIView):
         serializer = self.serializer_class(musics, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class MusicMoodCreateView(CreateAPIView):
+    serializer_class = MusicSerializer
+
+    def create(self, request, *args, **kwargs):
+        mood_data = predict(request.data.get('l'))
+        music_id = request.data.get('id')
+        mood = Music_Mood.objects.create(music_id = Music.objects.get(music_id=music_id),
+                                              fear=mood_data[0],
+                                              surprised=mood_data[1],
+                                              anger=mood_data[2],
+                                              sad=mood_data[3],
+                                              normal=mood_data[4],
+                                              happy=mood_data[5],
+                                              aversion=mood_data[6])
+        return Response({
+            "music_mood_id" : mood.music_mood_id
+        })
+
 class MusicMoodView(CreateAPIView):
-    serializer_class = MusicMooodSerializer
+    serializer_class = MusicMoodSerializer
 
     # def get_object(self):
     #     music_id = self.kwargs.get('music_id')
@@ -76,8 +94,11 @@ class MusicMoodView(CreateAPIView):
 
         diary_mood_values = list(Diary_Mood.objects.filter(diary_id=diary_id).values_list())
         diary = [mood[2:9] for mood in diary_mood_values]
-        music_mood_values = list(Music_Mood.objects.values_list())
-        ret = [mood[2:] for mood in music_mood_values]
+        #music_mood_values = list(Music_Mood.objects.values_list())
+        music_mood_values = []
+        for i in musics:
+            music_mood_values.append(list(Music_Mood.objects.filter(music_id=i.music_id).values_list()))
+        ret = [mood[0][2:] for mood in music_mood_values]
 
         sim = cosine_similarity(diary, ret)
         sim_music = []
