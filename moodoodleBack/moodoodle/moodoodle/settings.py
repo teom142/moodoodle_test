@@ -54,8 +54,8 @@ INSTALLED_APPS = [
     'friend.apps.FriendConfig',
     'music.apps.MusicConfig',
     'diary_mood.apps.DiaryMoodConfig',
+    'book.apps.BookConfig',
     'corsheaders',
-    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -162,10 +162,10 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_COOKIE_HTTPONLY = False
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = None#('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
