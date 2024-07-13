@@ -30,3 +30,7 @@ class BookMappingView(CreateAPIView):
             'diary_id': diary_id,
             'result': result
         }, status=status.HTTP_200_OK)
+
+class BookCreateView(CreateAPIView):
+    def create(self, request, diary_id, *args, **kwargs):
+        book_data =
