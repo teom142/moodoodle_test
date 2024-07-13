@@ -15,6 +15,7 @@ from .serializers import DiaryCreateSerializer, DiaryUpdateSerializer, DiaryDeta
 from calendar import monthrange
 from datetime import date, timedelta
 from diary_mood.views import DiaryMoodCreateView
+from book.utils import recommend_book
 
 class DiaryCreateView(CreateAPIView):
     serializer_class = DiaryCreateSerializer
@@ -54,13 +55,14 @@ class DiaryCreateView(CreateAPIView):
         data = {'user_id': user.user_id, 'date': date, 'content': content}
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        DiaryMoodCreateView.create(self, request=request, diary_id=serializer.data.get("diary_id"))
+        diary = serializer.save()
+        mood = DiaryMoodCreateView.create(self, request=request, diary_id=serializer.data.get("diary_id"))
+        # recommend_book(mood, diary)
         return Response({
             'success' : True,
             'status_code' : status.HTTP_201_CREATED,
             'message': "요청에 성공하였습니다.",
-            'data': serializer.data
+            'data': serializer.data,
         }, status=status.HTTP_201_CREATED)
 
 
